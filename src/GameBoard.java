@@ -1,8 +1,5 @@
-import stuff.GameCell;
-
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 import lenz.htw.gawihs.Move;
 
@@ -149,7 +146,7 @@ public class GameBoard {
                 pawnThatWillNotMakeAMove = myPawnPositions.get(i);
 
 
-                if(canPawnAtPointMove(pawnThatWillNotMakeAMove)){ //If that point can move, we can also visit its neighbors (weil dann ist er nicht unten, also sind seine nachbarn available)
+                if(canMyPawnAtPointMove(pawnThatWillNotMakeAMove)){ //If that point can move, we can also visit its neighbors (weil dann ist er nicht unten, also sind seine nachbarn available)
                     pointsOfNeighborsThatCanBeVisited = getPointsOfNeighborsThatCanBeVisited(pawnThatWillNotMakeAMove);
                     possibleTargets.addAll(pointsOfNeighborsThatCanBeVisited);
                 }
@@ -174,7 +171,7 @@ public class GameBoard {
 
         do{
             pointOfPawnThatWantsToMove = myPawnPositions.get(random.nextInt(5));
-            foundPossiblePawn = canPawnAtPointMove(pointOfPawnThatWantsToMove);
+            foundPossiblePawn = canMyPawnAtPointMove(pointOfPawnThatWantsToMove);
             //System.out.println("FOUND POSSIBLE PAWN: "+ foundPossiblePawn);
 
         }while(!foundPossiblePawn);
@@ -182,7 +179,7 @@ public class GameBoard {
         return pointOfPawnThatWantsToMove;
     }
 
-    private boolean canPawnAtPointMove(Point pointThatWantsToMove){
+    private boolean canMyPawnAtPointMove(Point pointThatWantsToMove){
         int cellValue = playField[pointThatWantsToMove.x][pointThatWantsToMove.y];
 
         if(cellValue == 8){ //TODO Remove for Tournament
@@ -344,55 +341,19 @@ public class GameBoard {
 
     }
 
-/*
-    public void updatePawnPositions(Move move){
+    public boolean isValidMove(Move move, int playerIndicator){
 
+        int cellValue = playField[move.fromX][move.fromY];
 
-        Point fromPoint = new Point(move.fromX, move.fromY);
-        Point toPoint = new Point(move.toX, move.toY);
-
-        if(myPawnPositions.contains(fromPoint)){
-
-            if(enemy1PawnPositions.contains(fromPoint)){
-
-
-                int cellValue = playField[fromPoint.x][fromPoint.y];
-                int playerCodeOfTopPawn = cellValue >> 4;
-
-                if(myPlayerNumber == 0 && playerCodeOfTopPawn == 1){
-                    myPawnPositions.remove(fromPoint);
-                    myPawnPositions.add(toPoint);
-                } else if(myPlayerNumber == 1 && playerCodeOfTopPawn == 1){
-                    enemy2PawnPositions.remove(fromPoint);
-                    enemy2PawnPositions.add(toPoint);
-                } else if(myPlayerNumber == 2 && playerCodeOfTopPawn == 1){
-                    enemy1PawnPositions.remove(fromPoint);
-                    enemy1PawnPositions.add(toPoint);
-                }
-
-
-
-            } else if(enemy2PawnPositions.contains(fromPoint)){
-
-            } else {
-                myPawnPositions.remove(fromPoint);
-                myPawnPositions.add(toPoint);
-            }
+        if(cellValue > 8){
+            cellValue = cellValue >> 4;
         }
 
-
-        if(enemy1PawnPositions.contains(new Point(move.fromX, move.fromY))){
-
-        }
+       // if(cellValue == 1 );
 
 
-        if(enemy2PawnPositions.contains(new Point(move.fromX, move.fromY))){
-
-        }
-
-
-
-    }*/
+        return true;
+    }
 
 
 }

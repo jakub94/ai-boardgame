@@ -39,17 +39,8 @@ public class BoardGameKI {
         while(true) {
 
 
-            //Move move = null;
 
-//            try {
-              Move move = client.receiveMove();
-//            } catch (RuntimeException e){
-//
-//                System.out.println("PLAYER WITH PLAYERIDICATOR: " + (moveCounter%2) + " LOST" + "THE NEXT PLAYER AFTER THE LOOSE IS PLAYER: " + myPlayerNumber);
-//
-//
-//            }
-
+            Move move = client.receiveMove();
             System.out.println(move);
 
 
@@ -63,6 +54,7 @@ public class BoardGameKI {
             } else {
                 //TODO baue zug in meine spielfeldrepräsentation ein
                 //System.out.println("Putting other players move into my board");
+
 
                 gameBoard.applyMove(move, moveCounter%3);
                 moveCounter++;
