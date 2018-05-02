@@ -88,6 +88,11 @@ public class GameBoard {
 
     public boolean isInBounds(int x, int y){
 
+
+        if(x > 8 || x < 0 || y > 8 || y < 0){
+            return false;
+        }
+
         if(y == 0 && x > 4){
             return false;
         }
@@ -179,8 +184,8 @@ public class GameBoard {
         return pointOfPawnThatWantsToMove;
     }
 
-    private boolean canMyPawnAtPointMove(Point pointThatWantsToMove){
-        int cellValue = playField[pointThatWantsToMove.x][pointThatWantsToMove.y];
+    private boolean canMyPawnAtPointMove(Point pawnAtPoint){
+        int cellValue = playField[pawnAtPoint.x][pawnAtPoint.y];
 
         if(cellValue == 8){ //TODO Remove for Tournament
             throw new RuntimeException("There is no pawn at this point, because the point has been eleminated");
@@ -236,9 +241,22 @@ public class GameBoard {
                             pointsOfNeighborsThatCanBeVisited.add(pointThatMightBeAddedToTargets);
                         }
                         else if(cellValue < 8){ //Mindestens oben ist noch frei (vielleicht auch unten, aber das haben wir vorher schon gecheckt) & außerdem ist die Cell existent (nicht out of bounds, oder gelöscht)
+
+
+
+
+
                             if(! myPawnPositions.contains(pointThatMightBeAddedToTargets)){ //Wenn wir hier nicht stehen, dann können wir hier hingehen
+
+
+
                                 pointsOfNeighborsThatCanBeVisited.add(pointThatMightBeAddedToTargets);
+
+
                             }
+
+
+
                         }
                     }
                 }
@@ -329,19 +347,35 @@ public class GameBoard {
         String enemy2Pawns = "";
 
         for(int i = 0; i < 5 ; i++){
-            myPawns += myPawnPositions.get(i).toString() + " // ";
-            enemy1Pawns += enemy1PawnPositions.get(i).toString() + " // ";
-            enemy2Pawns += enemy2PawnPositions.get(i).toString() + " // ";
+            if(myPawnPositions.size() > 0)
+               myPawns += myPawnPositions.get(i).toString() + " // ";
+            if(enemy1PawnPositions.size() > 0)
+                enemy1Pawns += enemy1PawnPositions.get(i).toString() + " // ";
+            if(enemy2PawnPositions.size() > 0)
+                enemy2Pawns += enemy2PawnPositions.get(i).toString() + " // ";
         }
 
-//        System.out.println("CurrentPlayerIndicator " + playerIndicator);
+        //System.out.println("CurrentPlayerIndicator " + playerIndicator);
         System.out.println("MyPawns: " + myPawns);
         System.out.println("enemy1Pawns: " + enemy1Pawns);
         System.out.println("enemy2Pawns: " + enemy2Pawns);
 
     }
 
-    public boolean isValidMove(Move move, int playerIndicator){
+    public boolean isValidMove(Move move, int playerIndicator) {
+
+
+        System.out.println(move + " IS VALID MOVE START? With PI: " + playerIndicator + " " + isValidMoveStart(move, playerIndicator));
+        System.out.println(move + " IS VALID MOVE TARGET? WITH PI: " + playerIndicator + " " + isValidMoveTarget(move, playerIndicator));
+
+        return isValidMoveStart(move, playerIndicator) && isValidMoveTarget(move, playerIndicator);
+    }
+
+
+    public boolean isValidMoveStart(Move move, int playerIndicator){
+
+
+
 
         int cellValue = playField[move.fromX][move.fromY];
 
@@ -349,11 +383,169 @@ public class GameBoard {
             cellValue = cellValue >> 4;
         }
 
-       // if(cellValue == 1 );
+        if(cellValue == 1 && playerIndicator == 0){
+            return true;
+        }
+        if(cellValue == 2 && playerIndicator == 1){
+            return true;
+        }
+        if(cellValue == 4 && playerIndicator == 2){
+            return true;
+        }
 
-
-        return true;
+        return false;
     }
+
+    public boolean isValidMoveTarget(Move move, int playerIndicator) {
+
+        int cellValue = playField[move.toX][move.toY];
+
+        if(cellValue >= 8){
+            return false; //Oben schon besetzt
+        } else {
+
+            if(cellValue == 1 && playerIndicator == 0){
+                return false; //wir stehen schon hier (Im Ziel)
+            }
+            if(cellValue == 2 && playerIndicator == 1){
+                return false; //wir stehen schon hier (Im Ziel)
+            }
+            if(cellValue == 4 && playerIndicator == 2){
+                return false; //wir stehen schon hier (Im Ziel)
+            }
+
+            for(int x = move.toX - 1; x <= move.toX + 1; x++){
+
+                for(int y = move.toY - 1; y <= move.toY + 1; y++){
+
+
+                    if(!isInBounds(x, y)){
+                        //Do nothing
+                    } else if( ( (move.toX -1 == x) && (move.toY +1 == y) ) || ( (move.toX +1 == x) && (move.toY -1 == y) ) ){
+
+                        //Do nothing, not neighbors on the field
+
+                    } else {
+
+                        int neighborCellValue = playField[x][y];
+
+                        if(neighborCellValue > 8){
+                            neighborCellValue = neighborCellValue >> 4;
+                        }
+
+                        if(neighborCellValue == 1 && playerIndicator == 0){
+                            return true;
+                        }
+                        if(neighborCellValue == 2 && playerIndicator == 1){
+                            return true;
+                        }
+                        if(neighborCellValue == 4 && playerIndicator == 2){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void removePlayer(int playerIndicator){
+
+        if(playerIndicator == 0){//Rot fliegt
+
+            if(myPlayerNumber == 1){//Wir sind Grün
+                removeEnemy(playerIndicator, 2);
+            }
+
+            if(myPlayerNumber == 2){//Wir sind Blau
+                removeEnemy(playerIndicator, 1);
+            }
+
+        }
+
+        if(playerIndicator == 1){//Grün fliegt
+
+            if(myPlayerNumber == 0){//Wir sind Rot
+                removeEnemy(playerIndicator,1);
+            }
+
+            if(myPlayerNumber == 2){//Wir sind Blau
+                removeEnemy(playerIndicator,2);
+            }
+
+        }
+
+        if(playerIndicator == 2){//Blau fliegt
+
+            if(myPlayerNumber == 1){//Wir sind Grün
+                removeEnemy(playerIndicator,1);
+            }
+
+            if(myPlayerNumber == 0){//Wir sind Rot
+                removeEnemy(playerIndicator,2);
+            }
+
+        }
+    }
+
+    private void removeEnemy(int playerIndicator, int enemyNumber){
+
+        if(enemyNumber == 1){
+            removePawns(playerIndicator, enemy1PawnPositions);
+            enemy1PawnPositions.clear();
+        } else if(enemyNumber == 2){
+            removePawns(playerIndicator, enemy2PawnPositions);
+            enemy2PawnPositions.clear();
+        }
+    }
+
+    private void removePawns(int playerIndicator, ArrayList<Point> pawnsToRemove){
+
+
+        int currentX = 0;
+        int currentY = 0;
+        int currentCellValue = 0;
+
+        for(Point pawn : pawnsToRemove){
+
+            currentX = pawn.x;
+            currentY = pawn.y;
+            currentCellValue = playField[currentX][currentY];
+
+            if(isPlayerOnTop(playerIndicator, currentCellValue)){
+
+             //Do nothing. Die obere bleibt einfach liegen, falls jedoch die untere ausscheidet, kann man wieder auf dieses Feld
+
+
+            } else {
+                if(currentCellValue > 8){//Jemand anderes ist oben als der zu löschende Pawn
+                    playField[currentX][currentY] = currentCellValue >> 4;
+                } else {
+                    playField[currentX][currentY] = 8;
+                }
+
+            }
+        }
+    }
+
+    private boolean isPlayerOnTop(int playerIndicator, int cellValue){
+
+        if(playerIndicator == 0){
+            if(cellValue >> 4 == 1) return true;
+        }
+        if(playerIndicator == 1){
+            if(cellValue >> 4 == 2) return true;
+        }
+        if(playerIndicator == 2){
+            if(cellValue >> 4 == 4) return true;
+        }
+
+        return false;
+
+    }
+
+
+
 
 
 }
