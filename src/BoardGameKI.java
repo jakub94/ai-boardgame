@@ -11,6 +11,10 @@ import lenz.htw.gawihs.net.NetworkClient;
 
 //java -Djava.library.path=lib/native -jar gawihs.jar
 
+
+//TODO GENAU nachdem 1 Spieler rausfliegt, weiß der Spieler danach im unmittelbar 1. Zug nicht das er raus ist
+//--> Spieler Grün Fliegt raus --> Blau bekommt "keinen Move" (also auch keinen ungültigen) --> Blau ist dran --> bewegt sich auf Feld wo vohre Grün war --> verloren
+
 public class BoardGameKI {
 
     private static int moveCounter;
@@ -29,10 +33,12 @@ public class BoardGameKI {
 
         int myPlayerNumber = client.getMyPlayerNumber();
 
-        moveCounter = 0;
+
+        MoveCounter.setPlayerNumber(myPlayerNumber);
 
 
 
+        moveCounter = 0; 
         GameBoard gameBoard = new GameBoard(myPlayerNumber);
 
         client.getTimeLimitInSeconds();
@@ -48,16 +54,22 @@ public class BoardGameKI {
             Move move = client.receiveMove();
             System.out.println("Move Received: " + move);
 
+            MoveCounter.put(move);
 
-            if (move == null) {
-                //ich bin dran
+
+            if (move == null && MoveCounter.isMyMove()) {
+
+
+
+                MoveCounter.put(move);
+
 
                 Move ourNextMove = gameBoard.getRandomMove();
                 //System.out.println("PlayerNumber: "+ myPlayerNumber + " makes move: " + ourNextMove);
 
 
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
                     client.sendMove(ourNextMove);
                     System.out.println(args[0] + " Makes move" + ourNextMove);
 
@@ -69,8 +81,6 @@ public class BoardGameKI {
 
 
             } else {
-                //TODO baue zug in meine spielfeldrepräsentation ein
-                //System.out.println("Putting other players move into my board");
 
                 System.out.println("PI: " + moveCounter%3);
 
@@ -83,8 +93,10 @@ public class BoardGameKI {
 
                     if(gameBoard.isValidMove(move, moveCounter%3)){
                         gameBoard.applyMove(move, moveCounter%3);
+
                         removePlayer((moveCounter-1)%3);
                         gameBoard.removePlayer((moveCounter-1)%3);
+
                     }else {
                         moveCounter++;
                         if(gameBoard.isValidMove(move, moveCounter%3)) {
@@ -99,12 +111,7 @@ public class BoardGameKI {
 
                 incrementMoveCounter();
 
-
             }
-
-
-            //moveCounter = (moveCounter +1) % 3;
-
         }
     }
 
@@ -122,8 +129,6 @@ public class BoardGameKI {
             System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color BLUE");
             blueInGame = false;
         }
-
-        moveCounter++;
     }
 
     private static void incrementMoveCounter(){

@@ -133,6 +133,8 @@ public class GameBoard {
 
     }
 
+
+    private int randomMoveCallStackCounter = 0;
     public Move getRandomMove(){
 
 
@@ -159,8 +161,16 @@ public class GameBoard {
             }
         }
 
+
+        if(randomMoveCallStackCounter > 70){
+            return new Move(0,0,8,8);
+        }
+
         if(possibleTargets.size() < 1){
+            randomMoveCallStackCounter++;
             return getRandomMove();
+        } else {
+            randomMoveCallStackCounter = 0;
         }
 
         Point randomTarget = possibleTargets.get(random.nextInt(possibleTargets.size()));
@@ -493,9 +503,12 @@ public class GameBoard {
         if(enemyNumber == 1){
             removePawns(playerIndicator, enemy1PawnPositions);
             enemy1PawnPositions.clear();
+            System.out.print("Removing Enemy 1");
+
         } else if(enemyNumber == 2){
             removePawns(playerIndicator, enemy2PawnPositions);
             enemy2PawnPositions.clear();
+            System.out.print("Removing Enemy 2");
         }
     }
 
