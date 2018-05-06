@@ -275,7 +275,9 @@ public class GameBoard {
         return pointsOfNeighborsThatCanBeVisited;
     }
 
-    public void applyMove(Move move, int playerIndicator){
+    public void applyMove(Move move){
+
+
 
         int startCellValue = playField[move.fromX][move.fromY];
         int targetCellValue = playField[move.toX][move.toY];
@@ -294,16 +296,16 @@ public class GameBoard {
         } else { //Keiner hier, also sind wir unten
             playField[move.toX][move.toY] = playerCode;
         }
-        updatePawnPositions(move, playerIndicator);
+        updatePawnPositions(move);
     }
 
-    public void updatePawnPositions(Move move, int playerIndicator){
+    public void updatePawnPositions(Move move){
 
         Point fromPoint = new Point(move.fromX, move.fromY);
         Point toPoint = new Point(move.toX, move.toY);
 
 
-        if(playerIndicator == 0){
+        if(MoveCounter.count == 0){
             if(myPlayerNumber == 0){
                 myPawnPositions.remove(fromPoint);
                 myPawnPositions.add(toPoint);
@@ -320,7 +322,7 @@ public class GameBoard {
             }
         }
 
-        if(playerIndicator == 1){
+        if(MoveCounter.count == 1){
             if(myPlayerNumber == 0){
                 enemy1PawnPositions.remove(fromPoint);
                 enemy1PawnPositions.add(toPoint);
@@ -336,7 +338,7 @@ public class GameBoard {
             }
         }
 
-        if(playerIndicator == 2){
+        if(MoveCounter.count == 2){
             if(myPlayerNumber == 0){
                 enemy2PawnPositions.remove(fromPoint);
                 enemy2PawnPositions.add(toPoint);
@@ -372,17 +374,17 @@ public class GameBoard {
 
     }
 
-    public boolean isValidMove(Move move, int playerIndicator) {
+    public boolean isValidMove(Move move) {
 
 
-        System.out.println(move + " IS VALID MOVE START? With PI: " + playerIndicator + " " + isValidMoveStart(move, playerIndicator));
-        System.out.println(move + " IS VALID MOVE TARGET? WITH PI: " + playerIndicator + " " + isValidMoveTarget(move, playerIndicator));
+        System.out.println(move + " IS VALID MOVE START? With PI: " + MoveCounter.count + " " + isValidMoveStart(move));
+        System.out.println(move + " IS VALID MOVE TARGET? WITH PI: " + MoveCounter.count + " " + isValidMoveTarget(move));
 
-        return isValidMoveStart(move, playerIndicator) && isValidMoveTarget(move, playerIndicator);
+        return isValidMoveStart(move) && isValidMoveTarget(move);
     }
 
 
-    public boolean isValidMoveStart(Move move, int playerIndicator){
+    public boolean isValidMoveStart(Move move){
 
 
 
@@ -393,20 +395,20 @@ public class GameBoard {
             cellValue = cellValue >> 4;
         }
 
-        if(cellValue == 1 && playerIndicator == 0){
+        if(cellValue == 1 && MoveCounter.count == 0){
             return true;
         }
-        if(cellValue == 2 && playerIndicator == 1){
+        if(cellValue == 2 && MoveCounter.count == 1){
             return true;
         }
-        if(cellValue == 4 && playerIndicator == 2){
+        if(cellValue == 4 && MoveCounter.count == 2){
             return true;
         }
 
         return false;
     }
 
-    public boolean isValidMoveTarget(Move move, int playerIndicator) {
+    public boolean isValidMoveTarget(Move move) {
 
         int cellValue = playField[move.toX][move.toY];
 
@@ -414,13 +416,13 @@ public class GameBoard {
             return false; //Oben schon besetzt
         } else {
 
-            if(cellValue == 1 && playerIndicator == 0){
+            if(cellValue == 1 && MoveCounter.count == 0){
                 return false; //wir stehen schon hier (Im Ziel)
             }
-            if(cellValue == 2 && playerIndicator == 1){
+            if(cellValue == 2 && MoveCounter.count == 1){
                 return false; //wir stehen schon hier (Im Ziel)
             }
-            if(cellValue == 4 && playerIndicator == 2){
+            if(cellValue == 4 && MoveCounter.count == 2){
                 return false; //wir stehen schon hier (Im Ziel)
             }
 
@@ -443,13 +445,13 @@ public class GameBoard {
                             neighborCellValue = neighborCellValue >> 4;
                         }
 
-                        if(neighborCellValue == 1 && playerIndicator == 0){
+                        if(neighborCellValue == 1 && MoveCounter.count == 0){
                             return true;
                         }
-                        if(neighborCellValue == 2 && playerIndicator == 1){
+                        if(neighborCellValue == 2 && MoveCounter.count == 1){
                             return true;
                         }
-                        if(neighborCellValue == 4 && playerIndicator == 2){
+                        if(neighborCellValue == 4 && MoveCounter.count == 2){
                             return true;
                         }
                     }

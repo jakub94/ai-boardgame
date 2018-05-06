@@ -16,19 +16,16 @@ public class MoveCounter {
     public static boolean isMyMove(Move move){
 
 
-
-
-        if(move == null) return true;
+        if(move == null) return true; 
 
         else return false;
 
 
 
-
     }
 
-    public static void increment(){
-        count++;
+    public static void increment(int amount){
+        count = count + amount;
         count = count % 3;
     }
 
