@@ -11,24 +11,57 @@ public class MoveCounter {
         playerNumber = num;
     }
 
-    public static void put(Move move){
 
 
-        if(move == null){
+    public static boolean isMyMove(Move move){
 
 
 
-        } else {
-            count++;
-        }
+
+        if(move == null) return true;
+
+        else return false;
+
+
 
 
     }
 
-    public static boolean isMyMove(){
+    public static void increment(){
+        count++;
+        count = count % 3;
+    }
+
+    public static int getLast(){
 
 
-        return true;
+        if(count == 0){
+            return 2;
+        }
+        if(count == 1){
+            return 0;
+        }
+        if(count == 2){
+            return 1;
+        }
+
+        return  count;  //should never happen
+    }
+
+    public static int getNext(){
+
+
+        if(count == 0){
+            return 1;
+        }
+        if(count == 1){
+            return 2;
+        }
+        if(count == 2){
+            return 0;
+        }
+
+        return  count;  //should never happen
     }
 
 

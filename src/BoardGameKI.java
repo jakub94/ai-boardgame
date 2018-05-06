@@ -17,7 +17,6 @@ import lenz.htw.gawihs.net.NetworkClient;
 
 public class BoardGameKI {
 
-    private static int moveCounter;
 
     private static boolean redInGame = true;
     private static boolean greenInGame = true;
@@ -37,8 +36,6 @@ public class BoardGameKI {
         MoveCounter.setPlayerNumber(myPlayerNumber);
 
 
-
-        moveCounter = 0; 
         GameBoard gameBoard = new GameBoard(myPlayerNumber);
 
         client.getTimeLimitInSeconds();
@@ -54,14 +51,9 @@ public class BoardGameKI {
             Move move = client.receiveMove();
             System.out.println("Move Received: " + move);
 
-            MoveCounter.put(move);
 
 
-            if (move == null && MoveCounter.isMyMove()) {
-
-
-
-                MoveCounter.put(move);
+            if (MoveCounter.isMyMove(move)) {
 
 
                 Move ourNextMove = gameBoard.getRandomMove();
@@ -79,34 +71,31 @@ public class BoardGameKI {
 
 
 
-
             } else {
 
-                System.out.println("PI: " + moveCounter%3);
+                System.out.println("PI: " + MoveCounter.count);
 
-                if(gameBoard.isValidMove(move, moveCounter%3)){
-                    gameBoard.applyMove(move, moveCounter%3);
+                if(gameBoard.isValidMove(move, MoveCounter.count)){
+                    gameBoard.applyMove(move, MoveCounter.count);
                 } else {
 
 
-                    moveCounter++;
+                    MoveCounter.increment();
 
-                    if(gameBoard.isValidMove(move, moveCounter%3)){
-                        gameBoard.applyMove(move, moveCounter%3);
+                    if(gameBoard.isValidMove(move, MoveCounter.count)){
+                        gameBoard.applyMove(move, MoveCounter.count);
 
-                        removePlayer((moveCounter-1)%3);
-                        gameBoard.removePlayer((moveCounter-1)%3);
+                        removePlayer(MoveCounter.getLast());
+                        gameBoard.removePlayer(MoveCounter.getLast());
 
                     }else {
-                        moveCounter++;
-                        if(gameBoard.isValidMove(move, moveCounter%3)) {
-                            gameBoard.applyMove(move, moveCounter%3);
-                            removePlayer((moveCounter - 2) % 3);
-                            gameBoard.removePlayer((moveCounter - 2) % 3);
+                        MoveCounter.increment();
+                        if(gameBoard.isValidMove(move, MoveCounter.count)) {
+                            gameBoard.applyMove(move, MoveCounter.count);
+                            removePlayer(MoveCounter.getNext());
+                            gameBoard.removePlayer(MoveCounter.getNext());
                         }
-
                     }
-
                 }
 
                 incrementMoveCounter();
@@ -134,7 +123,7 @@ public class BoardGameKI {
     private static void incrementMoveCounter(){
 
         if(redInGame && greenInGame && blueInGame){
-            moveCounter++;
+            MoveCounter.increment();
             System.out.println("ALLE NOCH DRIN, movecounter++");
             return;
         }
@@ -142,47 +131,47 @@ public class BoardGameKI {
         if(!redInGame){
             System.out.println("Rot ist raus!");
             if(blueInGame && greenInGame){
-                if( (moveCounter%3) == 2){
+                if( (MoveCounter.count) == 2){
                     System.out.println("Blau und Grün NOCH DRIN, BLAU WAR AM ZUG. Erhöhe Movecounter um 2");
-                    moveCounter = moveCounter +2; //Increment second time, after blue has played
+                    MoveCounter.count = MoveCounter.count +2; //Increment second time, after blue has played
                 }
                 else {
                     System.out.println("Blau und Grün NOCH DRIN, GRÜN WAR AM ZUG. Erhöhe Movecounter um 1");
-                    moveCounter++;
+                    MoveCounter.increment();
                 }
             } else if(blueInGame || greenInGame){ //nur noch einer ist im Game (Grün oder Blau)
                 System.out.println("nur noch einer ist im Game (Grün oder Blau) Erhöhe Movecounter um 3");
-                moveCounter = moveCounter + 3;
+                MoveCounter.count = MoveCounter.count + 3;
             }
         }
         else if(!greenInGame){
             System.out.println("Grün ist raus!");
             if(blueInGame && redInGame){
-                if( (moveCounter%3) == 0){
+                if( (MoveCounter.count) == 0){
                     System.out.println("Blau und Rot NOCH DRIN, Rot WAR AM ZUG. Erhöhe Movecounter um 2");
-                    moveCounter++; //Increment second time, after red has played
+                    MoveCounter.increment(); //Increment second time, after red has played
                 } else {
                     System.out.println("Blau und Rot NOCH DRIN, Blau WAR AM ZUG. Erhöhe Movecounter um 1");
-                    moveCounter++;
+                    MoveCounter.increment();
                 }
             } else if(blueInGame || redInGame){ //nur noch einer ist im Game (Rot oder Blau)
                 System.out.println("nur noch einer ist im Game (Rot oder Blau) Erhöhe Movecounter um 3");
-                moveCounter = moveCounter + 3;
+                MoveCounter.count = MoveCounter.count + 3;
             }
         }
         else if(!blueInGame){
             System.out.println("Blau ist raus!");
             if(redInGame && greenInGame){
-                if( (moveCounter%3) == 1){
+                if( (MoveCounter.count) == 1){
                     System.out.println("Rot und Grün NOCH DRIN, Grün WAR AM ZUG. Erhöhe Movecounter um 2");
-                    moveCounter++; //Increment second time, after green has played
+                    MoveCounter.increment(); //Increment second time, after green has played
                 } else {
                     System.out.println("Rot und Grün NOCH DRIN, Rot WAR AM ZUG. Erhöhe Movecounter um 1");
-                    moveCounter++;
+                    MoveCounter.increment();
                 }
             } else if(redInGame || greenInGame){ //nur noch einer ist im Game (Red oder Green)
                 System.out.println("nur noch einer ist im Game (Rot oder Grün) Erhöhe Movecounter um 3");
-                moveCounter = moveCounter + 3;
+                MoveCounter.count = MoveCounter.count + 3;
             }
         }
     }
