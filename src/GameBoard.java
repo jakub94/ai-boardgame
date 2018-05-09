@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import lenz.htw.gawihs.Move;
 
@@ -22,6 +23,8 @@ public class GameBoard {
     int myPlayerNumber;
 
     Random random = new Random();
+
+    HashMap<Integer, String> symbolMap = new HashMap<Integer, String>();
 
 
     public GameBoard(int myPlayerNumber){
@@ -51,6 +54,9 @@ public class GameBoard {
             enemy1PawnPositions = pawnPositionsRed;
             enemy2PawnPositions = pawnPositionsGreen;
         }
+
+        initSymbolMap();
+        printPlayField();
     }
 
     public int getInitialCellState(int x, int y){
@@ -557,6 +563,47 @@ public class GameBoard {
 
         return false;
 
+    }
+
+    public void printPlayField(){
+
+        int cellValue;
+        int topVal;
+        int bottomVal;
+        String line;
+        String lines = "";
+
+
+        System.out.println("    0   1   2   3   4   5   6   7   8");
+
+        for(int y = 0; y < 9; y++){
+            line = y + "  ";
+            for(int x = 0; x < 9; x++){
+
+                cellValue = playField[x][y];
+                topVal = cellValue >> 4;
+                bottomVal = cellValue & 0x0f;
+
+
+                line += ("|" + symbolMap.get(topVal) + symbolMap.get(bottomVal) + "|");
+
+            }
+            //System.out.println(line);
+            //System.out.println("__________________________________________");
+            lines = line + "\n" + lines;
+        }
+
+        System.out.println(lines);
+
+
+    }
+
+    private void initSymbolMap(){
+        this.symbolMap.put(0, "0");
+        this.symbolMap.put(1, "R");
+        this.symbolMap.put(2, "G");
+        this.symbolMap.put(4, "B");
+        this.symbolMap.put(8, "X");
     }
 
 

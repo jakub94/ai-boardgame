@@ -15,13 +15,11 @@ public class MoveCounter {
 
     public static boolean isMyMove(Move move){
 
-
-        if(move == null) return true; 
-
-        else return false;
-
-
-
+        if(move == null && playerNumber == count){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static void increment(int amount){

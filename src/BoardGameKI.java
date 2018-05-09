@@ -12,8 +12,8 @@ import lenz.htw.gawihs.net.NetworkClient;
 //java -Djava.library.path=lib/native -jar gawihs.jar
 
 
-//TODO GENAU nachdem 1 Spieler rausfliegt, weiß der Spieler danach im unmittelbar 1. Zug nicht das er raus ist
-//--> Spieler Grün Fliegt raus --> Blau bekommt "keinen Move" (also auch keinen ungültigen) --> Blau ist dran --> bewegt sich auf Feld wo vohre Grün war --> verloren
+//TODO BUG: Pawn das unten ist versucht weg zu moven.
+
 
 public class BoardGameKI {
 
@@ -22,21 +22,23 @@ public class BoardGameKI {
     private static boolean greenInGame = true;
     private static boolean blueInGame = true;
 
+    private static GameBoard gameBoard;
+    private static NetworkClient client;
+    private static String teamName;
 
     public static void main(String[] args) throws IOException {
 
         System.out.println("Initializing AI");
 
-        NetworkClient client = new NetworkClient(null, args[0], ImageIO.read(new File("./img/logo.png")));
+        teamName = args[0];
 
+        client = new NetworkClient(null, teamName, ImageIO.read(new File("./img/logo.png")));
 
         int myPlayerNumber = client.getMyPlayerNumber();
 
-
         MoveCounter.setPlayerNumber(myPlayerNumber);
 
-
-        GameBoard gameBoard = new GameBoard(myPlayerNumber);
+        gameBoard = new GameBoard(myPlayerNumber);
 
         client.getTimeLimitInSeconds();
 
@@ -53,55 +55,67 @@ public class BoardGameKI {
 
 
 
-            if (MoveCounter.isMyMove(move)) {
-
-
-                Move ourNextMove = gameBoard.getRandomMove();
-                //System.out.println("PlayerNumber: "+ myPlayerNumber + " makes move: " + ourNextMove);
-
-
-                try {
-                    Thread.sleep(200);
-                    client.sendMove(ourNextMove);
-                    System.out.println(args[0] + " Makes move" + ourNextMove);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
-
+            if(MoveCounter.isMyMove(move)) {
+                 sendRandomMove();
             } else {
 
                 System.out.println("PI: " + MoveCounter.count);
 
-                if(gameBoard.isValidMove(move)){
-                    gameBoard.applyMove(move);
+                if(move == null){ //It is "My" turn, but the Movecounter is not correct. Somebody must have made a mistake! Remove him!
+
+                    removePlayer(MoveCounter.count);
+                    gameBoard.removePlayer(MoveCounter.count);
+                    sendRandomMove();
+
                 } else {
-
-
-                    MoveCounter.increment(1);
 
                     if(gameBoard.isValidMove(move)){
                         gameBoard.applyMove(move);
+                    } else {
 
-                        removePlayer(MoveCounter.getLast());
-                        gameBoard.removePlayer(MoveCounter.getLast());
 
-                    }else {
                         MoveCounter.increment(1);
-                        if(gameBoard.isValidMove(move)) {
+
+                        if(gameBoard.isValidMove(move)){
                             gameBoard.applyMove(move);
-                            removePlayer(MoveCounter.getNext());
-                            gameBoard.removePlayer(MoveCounter.getNext());
+
+                            removePlayer(MoveCounter.getLast());
+                            gameBoard.removePlayer(MoveCounter.getLast());
+
+                        }else {
+                            MoveCounter.increment(1);
+                            if(gameBoard.isValidMove(move)) {
+                                gameBoard.applyMove(move);
+                                removePlayer(MoveCounter.getNext());
+                                gameBoard.removePlayer(MoveCounter.getNext());
+                            }
                         }
                     }
+
                 }
 
                 incrementMoveCounter();
 
+                gameBoard.printPlayField();
+
+
             }
         }
+    }
+
+    private static void sendRandomMove(){
+        Move ourNextMove = gameBoard.getRandomMove();
+        //System.out.println("PlayerNumber: "+ myPlayerNumber + " makes move: " + ourNextMove);
+
+        try {
+            Thread.sleep(200);
+            client.sendMove(ourNextMove);
+            System.out.println(teamName + " Makes move" + ourNextMove);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void removePlayer(int playerIndicator){
@@ -176,6 +190,9 @@ public class BoardGameKI {
             }
         }
     }
+
+
+
 }
 
 
