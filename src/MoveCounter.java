@@ -25,6 +25,8 @@ public class MoveCounter {
     public static void increment(int amount){
         count = count + amount;
         count = count % 3;
+
+        System.out.println("Incrementing Counter by " + amount + " to ---->" + count);
     }
 
     public static int getLast(){
@@ -58,6 +60,22 @@ public class MoveCounter {
 
         return  count;  //should never happen
     }
+
+
+    public static boolean isEnemy1(){
+        return count == ((playerNumber +1) % 3);
+    }
+
+    public static boolean isEnemy2(){
+        return count == ((playerNumber +2) % 3);
+    }
+
+    public static void setMyTurn(){
+        System.out.println("Setting my Turn: New Count=" + count);
+        count = playerNumber;
+    }
+
+
 
 
 

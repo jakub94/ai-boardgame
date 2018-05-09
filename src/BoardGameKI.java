@@ -63,10 +63,30 @@ public class BoardGameKI {
 
                 if(move == null){ //It is "My" turn, but the Movecounter is not correct. Somebody must have made a mistake! Remove him!
 
-                    removePlayer(MoveCounter.count);
-                    gameBoard.removePlayer(MoveCounter.count);
-                    sendRandomMove();
 
+
+
+                    if(MoveCounter.isEnemy1()){
+
+
+                        System.out.println("Removing both enemies");
+                        removePlayer(MoveCounter.getNext());
+                        gameBoard.removePlayer(MoveCounter.getNext());
+                        removePlayer(MoveCounter.count);
+                        gameBoard.removePlayer(MoveCounter.count);
+                        MoveCounter.setMyTurn();
+                        sendRandomMove();
+
+
+                    } else if(MoveCounter.isEnemy2()){
+
+                        System.out.println("Removing Enemy 2");
+                        removePlayer(MoveCounter.count);
+                        gameBoard.removePlayer(MoveCounter.count);
+                        sendRandomMove();
+                        MoveCounter.setMyTurn();
+
+                    }
                 } else {
 
                     if(gameBoard.isValidMove(move)){
