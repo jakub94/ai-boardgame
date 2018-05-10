@@ -384,9 +384,9 @@ public class GameBoard {
 
 
         System.out.println(move + " IS VALID MOVE START? With PI: " + MoveCounter.count + " " + isValidMoveStart(move));
-        System.out.println(move + " IS VALID MOVE TARGET? WITH PI: " + MoveCounter.count + " " + isValidMoveTarget(move));
+        //System.out.println(move + " IS VALID MOVE TARGET? WITH PI: " + MoveCounter.count + " " + isValidMoveTarget(move));
 
-        return isValidMoveStart(move); //&& isValidMoveTarget(move); 
+        return isValidMoveStart(move); //&& isValidMoveTarget(move);
     }
 
 

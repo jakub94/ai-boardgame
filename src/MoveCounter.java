@@ -31,7 +31,6 @@ public class MoveCounter {
 
     public static int getLast(){
 
-
         if(count == 0){
             return 2;
         }
@@ -71,8 +70,9 @@ public class MoveCounter {
     }
 
     public static void setMyTurn(){
-        System.out.println("Setting my Turn: New Count=" + count);
         count = playerNumber;
+        System.out.println("Setting my Turn: New Count=" + count);
+
     }
 
 
