@@ -8,12 +8,7 @@ import lenz.htw.gawihs.Move;
 import lenz.htw.gawihs.net.NetworkClient;
 
 
-
 //java -Djava.library.path=lib/native -jar gawihs.jar
-
-
-//TODO BUG: Pawn das unten ist versucht weg zu moven.
-
 
 public class BoardGameKI {
 
