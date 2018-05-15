@@ -61,7 +61,7 @@ public class GameBoard {
 
     public int getInitialCellState(int x, int y){
 
-        if(isInBounds(x,y)){
+        if(GameManager.isInBounds(x,y)){
 
             if(y == 0){ //Red
                 pawnPositionsRed.add(new Point(x, y));
@@ -92,53 +92,6 @@ public class GameBoard {
 
     }
 
-    public boolean isInBounds(int x, int y){
-
-
-        if(x > 8 || x < 0 || y > 8 || y < 0){
-            return false;
-        }
-
-        if(y == 0 && x > 4){
-            return false;
-        }
-
-        if(y == 1 && x > 5){
-            return false;
-        }
-
-        if(y == 2 && x > 6){
-            return false;
-        }
-
-        if(y == 3 && x > 7){
-            return false;
-        }
-
-        if(y == 4 && x == 4){
-            return false;
-        }
-
-        if(y == 5 && x == 0){
-            return false;
-        }
-
-        if(y == 6 && x < 2){
-            return false;
-        }
-
-        if(y == 7 && x < 3){
-            return false;
-        }
-
-        if(y == 8 && x < 4){
-            return false;
-        }
-
-        return true;
-
-    }
-
 
     private int randomMoveCallStackCounter = 0;
     public Move getRandomMove(){
@@ -159,7 +112,7 @@ public class GameBoard {
                 pawnThatWillNotMakeAMove = myPawnPositions.get(i);
 
 
-                if(canMyPawnAtPointMove(pawnThatWillNotMakeAMove)){ //If that point can move, we can also visit its neighbors (weil dann ist er nicht unten, also sind seine nachbarn available)
+                if(GameManager.canMyPawnAtPointMove(pawnThatWillNotMakeAMove, playField, myPlayerNumber)){ //If that point can move, we can also visit its neighbors (weil dann ist er nicht unten, also sind seine nachbarn available)
                     pointsOfNeighborsThatCanBeVisited = GameManager.getPointsOfNeighborsThatCanBeVisited(pawnThatWillNotMakeAMove, playField, myPawnPositions);
                     possibleTargets.addAll(pointsOfNeighborsThatCanBeVisited);
                 }
@@ -192,7 +145,7 @@ public class GameBoard {
 
         do{
             pointOfPawnThatWantsToMove = myPawnPositions.get(random.nextInt(5));
-            foundPossiblePawn = canMyPawnAtPointMove(pointOfPawnThatWantsToMove);
+            foundPossiblePawn = GameManager.canMyPawnAtPointMove(pointOfPawnThatWantsToMove, playField, myPlayerNumber);
             //System.out.println("FOUND POSSIBLE PAWN: "+ foundPossiblePawn);
 
         }while(!foundPossiblePawn);
@@ -200,39 +153,7 @@ public class GameBoard {
         return pointOfPawnThatWantsToMove;
     }
 
-    private boolean canMyPawnAtPointMove(Point pawnAtPoint){
-        int cellValue = playField[pawnAtPoint.x][pawnAtPoint.y];
-
-        if(cellValue == 8){ //TODO Remove for Tournament
-            throw new RuntimeException("There is no pawn at this point, because the point has been eleminated");
-        }
-
-        if(cellValue > 8){ // OBEN STEHT EINER
-
-            //Sind wir das?
-            if( ((cellValue >> 4) == 1) && myPlayerNumber == 0){
-                //Red
-                return true;
-            }
-            if( ((cellValue >> 4) == 2) && myPlayerNumber == 1){
-                //Green
-                return true;
-            }
-            if( ((cellValue >> 4) == 4) && myPlayerNumber == 2){
-                //Blue
-                return true;
-            }
-        } else {
-            return true;
-        }
-
-        return false;
-    }
-
-
     public void applyMove(Move move){
-
-
 
         int startCellValue = playField[move.fromX][move.fromY];
         int targetCellValue = playField[move.toX][move.toY];
@@ -390,7 +311,7 @@ public class GameBoard {
                 for(int y = move.toY - 1; y <= move.toY + 1; y++){
 
 
-                    if(!isInBounds(x, y)){
+                    if(!GameManager.isInBounds(x, y)){
                         //Do nothing
                     } else if( ( (move.toX -1 == x) && (move.toY +1 == y) ) || ( (move.toX +1 == x) && (move.toY -1 == y) ) ){
 

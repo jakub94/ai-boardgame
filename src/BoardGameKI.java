@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -41,8 +43,8 @@ public class BoardGameKI {
 
         Random random = new Random();
 
-        while(true) {
 
+        while(true) {
 
 
             Move move = client.receiveMove();
@@ -68,7 +70,8 @@ public class BoardGameKI {
 
 
             if(MoveCounter.isMyMove(move)) {
-                 sendRandomMove();
+                HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(gameBoard.playField, myPlayerNumber, gameBoard.myPawnPositions);
+                sendRandomMove();
             } else {
 
                 System.out.println("PI: " + MoveCounter.count);
