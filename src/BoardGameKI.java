@@ -70,7 +70,7 @@ public class BoardGameKI {
 
 
             if(MoveCounter.isMyMove(move)) {
-                HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(gameBoard.playField, myPlayerNumber, gameBoard.myPawnPositions);
+                //HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(gameBoard.playField, myPlayerNumber, gameBoard.myPawnPositions);
                 sendRandomMove();
             } else {
 

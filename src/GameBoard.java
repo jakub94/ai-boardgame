@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 import lenz.htw.gawihs.Move;
 
@@ -92,52 +93,12 @@ public class GameBoard {
 
     }
 
-
-    private int randomMoveCallStackCounter = 0;
     public Move getRandomMove(){
-
-
-        Point pointOfPawnThatWillMakeAMove = getPointOfPawnThatCanMove();
-
-        ArrayList<Point> possibleTargets = new ArrayList<>();
-        ArrayList<Point> pointsOfNeighborsThatCanBeVisited = new ArrayList<>();
-
-
-        Point pawnThatWillNotMakeAMove;
-
-        for(int i = 0 ; i < 5; i++){
-
-            if(!myPawnPositions.get(i).equals(pointOfPawnThatWillMakeAMove)){
-
-                pawnThatWillNotMakeAMove = myPawnPositions.get(i);
-
-
-                if(GameManager.canMyPawnAtPointMove(pawnThatWillNotMakeAMove, playField, myPlayerNumber)){ //If that point can move, we can also visit its neighbors (weil dann ist er nicht unten, also sind seine nachbarn available)
-                    pointsOfNeighborsThatCanBeVisited = GameManager.getPointsOfNeighborsThatCanBeVisited(pawnThatWillNotMakeAMove, playField, myPawnPositions);
-                    possibleTargets.addAll(pointsOfNeighborsThatCanBeVisited);
-                }
-
-            }
-        }
-
-
-        if(randomMoveCallStackCounter > 70){
-            return new Move(0,0,8,8);
-        }
-
-        if(possibleTargets.size() < 1){
-            randomMoveCallStackCounter++;
-            return getRandomMove();
-        } else {
-            randomMoveCallStackCounter = 0;
-        }
-
-        Point randomTarget = possibleTargets.get(random.nextInt(possibleTargets.size()));
-
-        return new Move(pointOfPawnThatWillMakeAMove.x, pointOfPawnThatWillMakeAMove.y, randomTarget.x, randomTarget.y);
-    }
-
-
+        HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(playField, myPlayerNumber, myPawnPositions);
+        if(allPossibleMoves.size() < 1) return new Move(0, 0, 8, 8);
+        MyMove nextMyMove = (MyMove) allPossibleMoves.toArray()[random.nextInt(allPossibleMoves.size())];
+        return new Move(nextMyMove.fromX, nextMyMove.fromY, nextMyMove.toX, nextMyMove.toY);
+    } 
 
     private Point getPointOfPawnThatCanMove(){
         boolean foundPossiblePawn = false;
