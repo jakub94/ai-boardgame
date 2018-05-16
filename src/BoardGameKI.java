@@ -15,9 +15,7 @@ import lenz.htw.gawihs.net.NetworkClient;
 public class BoardGameKI {
 
 
-    private static boolean redInGame = true;
-    private static boolean greenInGame = true;
-    private static boolean blueInGame = true;
+
 
     public static GameBoard gameBoard;
     private static NetworkClient client;
@@ -51,21 +49,7 @@ public class BoardGameKI {
             System.out.println("Move Received: " + move);
 
 
-            if(!redInGame){
-                if(MoveCounter.count == 0){
-                    MoveCounter.increment(1);
-                }
-            }
-            if(!greenInGame){
-                if(MoveCounter.count == 1){
-                    MoveCounter.increment(1);
-                }
-            }
-            if(!blueInGame){
-                if(MoveCounter.count == 2){
-                    MoveCounter.increment(1);
-                }
-            }
+            MoveCounter.manageKickedPlayers();
 
 
 
@@ -93,9 +77,9 @@ public class BoardGameKI {
 
                     if(MoveCounter.isEnemy1()){
                         System.out.println("Removing both enemies");
-                        removePlayer(MoveCounter.getNext());
+                        MoveCounter.removePlayer(MoveCounter.getNext());
                         gameBoard.removePlayer(MoveCounter.getNext());
-                        removePlayer(MoveCounter.count);
+                        MoveCounter.removePlayer(MoveCounter.count);
                         gameBoard.removePlayer(MoveCounter.count);
                         MoveCounter.setMyTurn();
                         sendRandomMove();
@@ -104,7 +88,7 @@ public class BoardGameKI {
                     } else if(MoveCounter.isEnemy2()){
 
                         System.out.println("Removing Enemy 2");
-                        removePlayer(MoveCounter.count);
+                        MoveCounter.removePlayer(MoveCounter.count);
                         gameBoard.removePlayer(MoveCounter.count);
                         MoveCounter.setMyTurn();
                         sendRandomMove();
@@ -122,7 +106,7 @@ public class BoardGameKI {
                             MoveCounter.increment(1);
 
                             if(gameBoard.isValidMove(move)) {
-                                removePlayer(MoveCounter.getLast());
+                                MoveCounter.removePlayer(MoveCounter.getLast());
                                 gameBoard.removePlayer(MoveCounter.getLast());
                                 gameBoard.applyMove(move);
                             }
@@ -132,7 +116,7 @@ public class BoardGameKI {
                         if(gameBoard.isValidMove(move)){
                             gameBoard.applyMove(move);
                         } else {
-                            removePlayer(MoveCounter.count);
+                            MoveCounter.removePlayer(MoveCounter.count);
                             gameBoard.removePlayer(MoveCounter.count);
                         }
 
@@ -162,21 +146,7 @@ public class BoardGameKI {
 
     }
 
-    private static void removePlayer(int playerIndicator){
 
-        if(playerIndicator == 0){
-            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color RED");
-            redInGame = false;
-        }
-        if(playerIndicator == 1){
-            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color GREEN");
-            greenInGame = false;
-        }
-        if(playerIndicator == 2){
-            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color BLUE");
-            blueInGame = false;
-        }
-    }
 
 }
 

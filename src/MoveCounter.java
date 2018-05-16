@@ -5,6 +5,9 @@ public class MoveCounter {
     public static int playerNumber;
     public static int count = 0;
 
+    private static boolean redInGame = true;
+    private static boolean greenInGame = true;
+    private static boolean blueInGame = true;
 
 
     public static void setPlayerNumber(int num){
@@ -75,7 +78,40 @@ public class MoveCounter {
 
     }
 
+    public static void manageKickedPlayers(){
 
+        if(!redInGame){
+            if(MoveCounter.count == 0){
+                MoveCounter.increment(1);
+            }
+        }
+        if(!greenInGame){
+            if(MoveCounter.count == 1){
+                MoveCounter.increment(1);
+            }
+        }
+        if(!blueInGame){
+            if(MoveCounter.count == 2){
+                MoveCounter.increment(1);
+            }
+        }
+    }
+
+    public static void removePlayer(int playerIndicator){
+
+        if(playerIndicator == 0){
+            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color RED");
+            redInGame = false;
+        }
+        if(playerIndicator == 1){
+            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color GREEN");
+            greenInGame = false;
+        }
+        if(playerIndicator == 2){
+            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color BLUE");
+            blueInGame = false;
+        }
+    }
 
 
 
