@@ -15,11 +15,9 @@ public class RatingFunction {
 
     public static int evaluate(int[][] playField, int playerIndicator){
 
-
         int myAvailablePawns = 0;
         int pinnedEnemyPawns = 0;
         int neighbors = 0;
-
 
         for(int x = 0; x < 9; x++){
             for(int y = 0; y < 9; y++){
@@ -36,9 +34,8 @@ public class RatingFunction {
             }
         }
 
+
         neighbors =  getNumberOfAvailableNeighbors(playField);
-
-
 
         System.out.println("MyAvailablePawns " + myAvailablePawns);
         System.out.println("PinnedEnemyPawns " + pinnedEnemyPawns);

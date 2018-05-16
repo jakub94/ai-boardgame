@@ -16,12 +16,12 @@ public class GameBoard {
     ArrayList<Point> pawnPositionsGreen = new ArrayList();
     ArrayList<Point> pawnPositionsBlue = new ArrayList();
 
-    ArrayList<Point> myPawnPositions = new ArrayList();
-    ArrayList<Point> enemy1PawnPositions = new ArrayList();
-    ArrayList<Point> enemy2PawnPositions = new ArrayList();
+    public ArrayList<Point> myPawnPositions = new ArrayList();
+    public ArrayList<Point> enemy1PawnPositions = new ArrayList();
+    public ArrayList<Point> enemy2PawnPositions = new ArrayList();
 
 
-    int myPlayerNumber;
+    public int myPlayerNumber;
 
     Random random = new Random();
 
@@ -59,6 +59,27 @@ public class GameBoard {
         initSymbolMap();
         printPlayField();
     }
+
+    public GameBoard(int myPlayerNumber, int[][] playField, ArrayList<Point> myPawnPositions, ArrayList<Point> enemy1PawnPositions, ArrayList<Point> enemy2PawnPositions){
+
+        this.myPlayerNumber = myPlayerNumber;
+        this.myPawnPositions =     (ArrayList<Point>) myPawnPositions.clone();
+        this.enemy1PawnPositions = (ArrayList<Point>) enemy1PawnPositions.clone();
+        this.enemy2PawnPositions = (ArrayList<Point>) enemy2PawnPositions.clone();
+
+
+        this.playField = new int [9][9];
+
+        for(int x = 0; x < 9; x++){
+            for(int y = 0; y < 9; y++){
+                this.playField[x][y] = playField[x][y];
+            }
+        }
+    }
+
+
+
+
 
     public int getInitialCellState(int x, int y){
 
@@ -114,7 +135,7 @@ public class GameBoard {
         return pointOfPawnThatWantsToMove;
     }
 
-    public void applyMove(Move move){
+    public void applyMove(Move move, int playerIndicator){
 
         int startCellValue = playField[move.fromX][move.fromY];
         int targetCellValue = playField[move.toX][move.toY];
@@ -133,17 +154,17 @@ public class GameBoard {
         } else { //Keiner hier, also sind wir unten
             playField[move.toX][move.toY] = playerCode;
         }
-        updatePawnPositions(move);
+        updatePawnPositions(move, playerIndicator);
        // RatingFunction.evaluate(playField, myPlayerNumber);
     }
 
-    public void updatePawnPositions(Move move){
+    public void updatePawnPositions(Move move, int playerIndicator){  
 
         Point fromPoint = new Point(move.fromX, move.fromY);
         Point toPoint = new Point(move.toX, move.toY);
 
 
-        if(MoveCounter.count == 0){
+        if(BoardGameKI.moveCounter.count == 0){
             if(myPlayerNumber == 0){
                 myPawnPositions.remove(fromPoint);
                 myPawnPositions.add(toPoint);
@@ -160,7 +181,7 @@ public class GameBoard {
             }
         }
 
-        if(MoveCounter.count == 1){
+        if(BoardGameKI.moveCounter.count == 1){
             if(myPlayerNumber == 0){
                 enemy1PawnPositions.remove(fromPoint);
                 enemy1PawnPositions.add(toPoint);
@@ -176,7 +197,7 @@ public class GameBoard {
             }
         }
 
-        if(MoveCounter.count == 2){
+        if(BoardGameKI.moveCounter.count == 2){
             if(myPlayerNumber == 0){
                 enemy2PawnPositions.remove(fromPoint);
                 enemy2PawnPositions.add(toPoint);
@@ -215,7 +236,7 @@ public class GameBoard {
     public boolean isValidMove(Move move) {
 
 
-        System.out.println(move + " IS VALID MOVE START? With PI: " + MoveCounter.count + " " + isValidMoveStart(move));
+        System.out.println(move + " IS VALID MOVE START? With PI: " + BoardGameKI.moveCounter.count + " " + isValidMoveStart(move));
         //System.out.println(move + " IS VALID MOVE TARGET? WITH PI: " + MoveCounter.count + " " + isValidMoveTarget(move));
 
         return isValidMoveStart(move); //&& isValidMoveTarget(move);
@@ -233,13 +254,13 @@ public class GameBoard {
             cellValue = cellValue >> 4;
         }
 
-        if(cellValue == 1 && MoveCounter.count == 0){
+        if(cellValue == 1 && BoardGameKI.moveCounter.count == 0){
             return true;
         }
-        if(cellValue == 2 && MoveCounter.count == 1){
+        if(cellValue == 2 && BoardGameKI.moveCounter.count == 1){
             return true;
         }
-        if(cellValue == 4 && MoveCounter.count == 2){
+        if(cellValue == 4 && BoardGameKI.moveCounter.count == 2){
             return true;
         }
 
@@ -254,13 +275,13 @@ public class GameBoard {
             return false; //Oben schon besetzt
         } else {
 
-            if(cellValue == 1 && MoveCounter.count == 0){
+            if(cellValue == 1 && BoardGameKI.moveCounter.count == 0){
                 return false; //wir stehen schon hier (Im Ziel)
             }
-            if(cellValue == 2 && MoveCounter.count == 1){
+            if(cellValue == 2 && BoardGameKI.moveCounter.count == 1){
                 return false; //wir stehen schon hier (Im Ziel)
             }
-            if(cellValue == 4 && MoveCounter.count == 2){
+            if(cellValue == 4 && BoardGameKI.moveCounter.count == 2){
                 return false; //wir stehen schon hier (Im Ziel)
             }
 
@@ -283,13 +304,13 @@ public class GameBoard {
                             neighborCellValue = neighborCellValue >> 4;
                         }
 
-                        if(neighborCellValue == 1 && MoveCounter.count == 0){
+                        if(neighborCellValue == 1 && BoardGameKI.moveCounter.count == 0){
                             return true;
                         }
-                        if(neighborCellValue == 2 && MoveCounter.count == 1){
+                        if(neighborCellValue == 2 && BoardGameKI.moveCounter.count == 1){
                             return true;
                         }
-                        if(neighborCellValue == 4 && MoveCounter.count == 2){
+                        if(neighborCellValue == 4 && BoardGameKI.moveCounter.count == 2){
                             return true;
                         }
                     }

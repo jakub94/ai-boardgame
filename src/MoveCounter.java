@@ -2,21 +2,21 @@ import lenz.htw.gawihs.Move;
 
 public class MoveCounter {
 
-    public static int playerNumber;
-    public static int count = 0;
+    public  int playerNumber;
+    public  int count = 0;
 
-    private static boolean redInGame = true;
-    private static boolean greenInGame = true;
-    private static boolean blueInGame = true;
+    private  boolean redInGame = true;
+    private  boolean greenInGame = true;
+    private  boolean blueInGame = true;
 
 
-    public static void setPlayerNumber(int num){
+    public void setPlayerNumber(int num){
         playerNumber = num;
     }
 
 
 
-    public static boolean isMyMove(Move move){
+    public boolean isMyMove(Move move){
 
         if(move == null && playerNumber == count){
             return true;
@@ -25,14 +25,19 @@ public class MoveCounter {
         }
     }
 
-    public static void increment(int amount){
+
+    public boolean isCountEqualTo(int number){
+        return count == number;
+    }
+
+    public void increment(int amount){
         count = count + amount;
         count = count % 3;
 
         System.out.println("Incrementing Counter by " + amount + " to ---->" + count);
     }
 
-    public static int getLast(){
+    public int getLast(){
 
         if(count == 0){
             return 2;
@@ -47,7 +52,7 @@ public class MoveCounter {
         return  count;  //should never happen
     }
 
-    public static int getNext(){
+    public int getNext(){
 
 
         if(count == 0){
@@ -64,51 +69,51 @@ public class MoveCounter {
     }
 
 
-    public static boolean isEnemy1(){
+    public boolean isEnemy1(){
         return count == ((playerNumber +1) % 3);
     }
 
-    public static boolean isEnemy2(){
+    public boolean isEnemy2(){
         return count == ((playerNumber +2) % 3);
     }
 
-    public static void setMyTurn(){
+    public void setMyTurn(){
         count = playerNumber;
         System.out.println("Setting my Turn: New Count=" + count);
 
     }
 
-    public static void manageKickedPlayers(){
+    public void manageKickedPlayers(){
 
         if(!redInGame){
-            if(MoveCounter.count == 0){
-                MoveCounter.increment(1);
+            if(this.count == 0){
+                this.increment(1);
             }
         }
         if(!greenInGame){
-            if(MoveCounter.count == 1){
-                MoveCounter.increment(1);
+            if(this.count == 1){
+                this.increment(1);
             }
         }
         if(!blueInGame){
-            if(MoveCounter.count == 2){
-                MoveCounter.increment(1);
+            if(this.count == 2){
+                this.increment(1);
             }
         }
     }
 
-    public static void removePlayer(int playerIndicator){
+    public void removePlayer(int playerIndicator){
 
         if(playerIndicator == 0){
-            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color RED");
+            System.out.println("REMOVING PLAYER WITH INDICATOR " + playerIndicator + "With Color RED");
             redInGame = false;
         }
         if(playerIndicator == 1){
-            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color GREEN");
+            System.out.println("REMOVING PLAYER WITH INDICATOR " + playerIndicator + "With Color GREEN");
             greenInGame = false;
         }
         if(playerIndicator == 2){
-            System.out.println("REMOVING PLAYER WIHT INDICATOR " + playerIndicator + "With Color BLUE");
+            System.out.println("REMOVING PLAYER WITH INDICATOR " + playerIndicator + "With Color BLUE");
             blueInGame = false;
         }
     }

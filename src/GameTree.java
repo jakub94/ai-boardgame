@@ -9,49 +9,45 @@ import java.util.Iterator;
 public class GameTree {
 
 
-    private int alpha;
-    private int beta;
 
-    private int[][] playField;
-    private int currentPlayerIndicator;
-    private ArrayList<Point> myPawns = new ArrayList<>();
+
+
+    private int myPlayerNumber;
+
+    private MoveCounter moveCounter;
+
 
     private MyMove bestMove;
 
 
 
-    public GameTree(int[][] playField, int currentPlayerIndicator, ArrayList<Point> myPawns){
-        this.playField = playField;
-        this.currentPlayerIndicator = currentPlayerIndicator;
-        this.myPawns = myPawns;
-    }
-
-
-
     public Move getBestMove(int[][] playField, int playerNumber){
 
-        HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(playField, currentPlayerIndicator, myPawns);
+
+        this.myPlayerNumber = playerNumber;
+
+        moveCounter = new MoveCounter();
+        moveCounter.setPlayerNumber(playerNumber);
 
 
-
-        GameBoard currentGameBoard = BoardGameKI.gameBoard;
-
-
+        HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(playField, playerNumber, BoardGameKI.gameBoard.myPawnPositions);
+        GameBoard currentGameBoard = new GameBoard(myPlayerNumber, playField, BoardGameKI.gameBoard.myPawnPositions, BoardGameKI.gameBoard.enemy1PawnPositions, BoardGameKI.gameBoard.enemy2PawnPositions);
 
 
         int currentOutcome;
         int bestOutCome = -99999;
 
-        Move bestMove;
+        Move bestMove = null;
 
         for (MyMove move: possibleMoves) {
 
 
             currentGameBoard.applyMove(move);
+            moveCounter.increment(1);
 
 
 
-            currentOutcome = alphabeta(currentGameBoard, 3, -9999, +9999, true);
+            currentOutcome = alphabeta(currentGameBoard, 3, -9999, +9999, false);
 
 
 
@@ -59,20 +55,13 @@ public class GameTree {
                 bestMove = move;
                 bestOutCome = currentOutcome;
             }
-
-
-
         }
 
 
-        return null;
+        return bestMove;
     }
 
     public int alphabeta(GameBoard configuration, int depth, int alpha, int beta, boolean maximizingPlayer){
-
-
-
-
 
         int v;
 
@@ -90,8 +79,10 @@ public class GameTree {
 
                 GameBoard nextConfiguration = configuration;
                 nextConfiguration.applyMove(nextMove);
+                moveCounter.increment(1);
 
-                v = Integer.max(v, alphabeta(nextConfiguration, depth-1, alpha, beta, false));
+
+                v = Integer.max(v, alphabeta(nextConfiguration, depth-1, alpha, beta, moveCounter.isCountEqualTo(myPlayerNumber)));
                 alpha = Integer.max(alpha, v);
 
                 if(beta <= alpha){
@@ -109,8 +100,9 @@ public class GameTree {
 
                 GameBoard nextConfiguration = configuration;
                 nextConfiguration.applyMove(nextMove);
+                moveCounter.increment(1);
 
-                v = Integer.min(v, alphabeta(nextConfiguration, depth-1, alpha, beta, true)); // methode um den nächsten player zu bestimmen
+                v = Integer.min(v, alphabeta(nextConfiguration, depth-1, alpha, beta, moveCounter.isCountEqualTo(myPlayerNumber))); // methode um den nächsten player zu bestimmen
                 beta = Integer.min(beta, v);
 
                 if(beta <= alpha){

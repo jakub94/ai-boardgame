@@ -12,6 +12,18 @@ import lenz.htw.gawihs.net.NetworkClient;
 
 //java -Djava.library.path=lib/native -jar gawihs.jar
 
+
+
+
+//TODO:
+/*
+    MoveCounter im GameTree anpassen, wenn ein Spieler raus ist.
+
+ */
+
+
+
+
 public class BoardGameKI {
 
 
@@ -20,6 +32,8 @@ public class BoardGameKI {
     public static GameBoard gameBoard;
     private static NetworkClient client;
     private static String teamName;
+
+    public static MoveCounter moveCounter;
 
     public static void main(String[] args) throws IOException {
 
@@ -31,7 +45,9 @@ public class BoardGameKI {
 
         int myPlayerNumber = client.getMyPlayerNumber();
 
-        MoveCounter.setPlayerNumber(myPlayerNumber);
+        moveCounter = new MoveCounter();
+
+        moveCounter.setPlayerNumber(myPlayerNumber);
 
         gameBoard = new GameBoard(myPlayerNumber);
 
@@ -49,82 +65,70 @@ public class BoardGameKI {
             System.out.println("Move Received: " + move);
 
 
-            MoveCounter.manageKickedPlayers();
+            moveCounter.manageKickedPlayers();
 
+            if(moveCounter.isMyMove(move)) {
+                  GameTree gameTree = new GameTree();
+                  Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
+                  client.sendMove(nextMove);
 
-
-            if(MoveCounter.isMyMove(move)) {
-                //HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(gameBoard.playField, myPlayerNumber, gameBoard.myPawnPositions);
-
-
-
-                GameTree gameTree = new GameTree(gameBoard.playField, myPlayerNumber, gameBoard.myPawnPositions);
-                //gameTree.AlphaBeta(3, -9999, 9999);
-
-
-
-
-                sendRandomMove();
-
-
-
+              //sendRandomMove();
 
             } else {
 
-                System.out.println("PI: " + MoveCounter.count);
+                System.out.println("PI: " + moveCounter.count);
 
                 if(move == null){ //It is "My" turn, but the Movecounter is not correct. Somebody must have made a mistake! Remove him!
 
-                    if(MoveCounter.isEnemy1()){
+                    if(moveCounter.isEnemy1()){
                         System.out.println("Removing both enemies");
-                        MoveCounter.removePlayer(MoveCounter.getNext());
-                        gameBoard.removePlayer(MoveCounter.getNext());
-                        MoveCounter.removePlayer(MoveCounter.count);
-                        gameBoard.removePlayer(MoveCounter.count);
-                        MoveCounter.setMyTurn();
+                        moveCounter.removePlayer(moveCounter.getNext());
+                        gameBoard.removePlayer(moveCounter.getNext());
+                        moveCounter.removePlayer(moveCounter.count);
+                        gameBoard.removePlayer(moveCounter.count);
+                        moveCounter.setMyTurn();
                         sendRandomMove();
                         continue;
 
-                    } else if(MoveCounter.isEnemy2()){
+                    } else if(moveCounter.isEnemy2()){
 
                         System.out.println("Removing Enemy 2");
-                        MoveCounter.removePlayer(MoveCounter.count);
-                        gameBoard.removePlayer(MoveCounter.count);
-                        MoveCounter.setMyTurn();
+                        moveCounter.removePlayer(moveCounter.count);
+                        gameBoard.removePlayer(moveCounter.count);
+                        moveCounter.setMyTurn();
                         sendRandomMove();
                         continue;
-
                     }
                 } else {
 
-                    if(MoveCounter.isEnemy1()){
+                    if(moveCounter.isEnemy1()){
 
                         if(gameBoard.isValidMove(move)){
-                            gameBoard.applyMove(move);
+                            gameBoard.applyMove(move, moveCounter.count);
                         } else {
 
-                            MoveCounter.increment(1);
+                            moveCounter.increment(1);
 
                             if(gameBoard.isValidMove(move)) {
-                                MoveCounter.removePlayer(MoveCounter.getLast());
-                                gameBoard.removePlayer(MoveCounter.getLast());
-                                gameBoard.applyMove(move);
+                                moveCounter.removePlayer(moveCounter.getLast());
+                                gameBoard.removePlayer(moveCounter.getLast());
+                                gameBoard.applyMove(move, moveCounter.count);
                             }
                         }
-                    } else if(MoveCounter.isEnemy2()){
+                    } else if(moveCounter.isEnemy2()){
 
                         if(gameBoard.isValidMove(move)){
-                            gameBoard.applyMove(move);
+                            gameBoard.applyMove(move, moveCounter.count);
                         } else {
-                            MoveCounter.removePlayer(MoveCounter.count);
-                            gameBoard.removePlayer(MoveCounter.count);
+                            moveCounter.removePlayer(moveCounter.count);
+                            gameBoard.removePlayer(moveCounter.count);
                         }
 
                     } else { //"My" turn
-                        gameBoard.applyMove(move);
+                        gameBoard.applyMove(move, moveCounter.count);
                     }
                 }
-                MoveCounter.increment(1);
+                moveCounter.increment(1);
                 gameBoard.printPlayField();
 
             }
@@ -136,7 +140,7 @@ public class BoardGameKI {
         //System.out.println("PlayerNumber: "+ myPlayerNumber + " makes move: " + ourNextMove);
 
         try {
-            Thread.sleep(200);
+            Thread.sleep(1);
             client.sendMove(ourNextMove);
             System.out.println(teamName + " Makes move" + ourNextMove);
 
