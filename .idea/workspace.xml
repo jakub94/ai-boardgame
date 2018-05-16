@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9155e67-2d64-4c83-b4b4-9f2ad57a78cb" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/BoardGameProject/BoardGameKI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/BoardGameProject/MoveCounter.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/BoardGameKI.java" afterPath="$PROJECT_DIR$/src/BoardGameKI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameBoard.java" afterPath="$PROJECT_DIR$/src/GameBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameManager.java" afterPath="$PROJECT_DIR$/src/GameManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameTree.java" afterPath="$PROJECT_DIR$/src/GameTree.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MoveCounter.java" afterPath="$PROJECT_DIR$/src/MoveCounter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RatingFunction.java" afterPath="$PROJECT_DIR$/src/RatingFunction.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,8 +32,8 @@
       <file leaf-file-name="GameBoard.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/GameBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="160" column="70" lean-forward="false" selection-start-line="160" selection-start-column="70" selection-end-line="160" selection-end-column="70" />
+            <state relative-caret-position="373">
+              <caret line="209" column="51" lean-forward="false" selection-start-line="209" selection-start-column="51" selection-end-line="209" selection-end-column="51" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#764#781#0" expanded="true" />
@@ -422,7 +414,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="167750000" />
+    <option name="totallyTimeSpent" value="167804000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -909,8 +901,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameBoard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="160" column="70" lean-forward="false" selection-start-line="160" selection-start-column="70" selection-end-line="160" selection-end-column="70" />
+        <state relative-caret-position="373">
+          <caret line="209" column="51" lean-forward="false" selection-start-line="209" selection-start-column="51" selection-end-line="209" selection-end-column="51" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#764#781#0" expanded="true" />

@@ -158,13 +158,13 @@ public class GameBoard {
        // RatingFunction.evaluate(playField, myPlayerNumber);
     }
 
-    public void updatePawnPositions(Move move, int playerIndicator){  
+    public void updatePawnPositions(Move move, int playerIndicator){
 
         Point fromPoint = new Point(move.fromX, move.fromY);
         Point toPoint = new Point(move.toX, move.toY);
 
 
-        if(BoardGameKI.moveCounter.count == 0){
+        if(playerIndicator == 0){
             if(myPlayerNumber == 0){
                 myPawnPositions.remove(fromPoint);
                 myPawnPositions.add(toPoint);
@@ -181,7 +181,7 @@ public class GameBoard {
             }
         }
 
-        if(BoardGameKI.moveCounter.count == 1){
+        if(playerIndicator == 1){
             if(myPlayerNumber == 0){
                 enemy1PawnPositions.remove(fromPoint);
                 enemy1PawnPositions.add(toPoint);
@@ -197,7 +197,7 @@ public class GameBoard {
             }
         }
 
-        if(BoardGameKI.moveCounter.count == 2){
+        if(playerIndicator == 2){
             if(myPlayerNumber == 0){
                 enemy2PawnPositions.remove(fromPoint);
                 enemy2PawnPositions.add(toPoint);
@@ -207,7 +207,7 @@ public class GameBoard {
                 enemy1PawnPositions.add(toPoint);
             }
             if(myPlayerNumber == 2){
-                myPawnPositions.remove(fromPoint);
+                myPawnPositions.remove(fromPoint); 
                 myPawnPositions.add(toPoint);
 
             }
