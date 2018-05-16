@@ -18,13 +18,18 @@ import lenz.htw.gawihs.net.NetworkClient;
 //TODO:
 /*
     MoveCounter im GameTree anpassen, wenn ein Spieler raus ist.
+    MyPawnPositions fehlerhaft (enthält enemyPawns)
+    MyPlayerNumber wird evtl. auch fehlerhaft geupdated
+
+    Bewertungsfunktion anpassen/erweitern
+    Lernmechanismus für Bewertungsfunktion
 
  */
 
 
 
 
-public class BoardGameKI {
+public class BoardGameKI { 
 
 
 
@@ -45,10 +50,7 @@ public class BoardGameKI {
 
         int myPlayerNumber = client.getMyPlayerNumber();
 
-        moveCounter = new MoveCounter();
-
-        moveCounter.setPlayerNumber(myPlayerNumber);
-
+        moveCounter = new MoveCounter(0, myPlayerNumber);
         gameBoard = new GameBoard(myPlayerNumber);
 
         client.getTimeLimitInSeconds();

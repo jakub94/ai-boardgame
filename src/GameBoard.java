@@ -77,6 +77,23 @@ public class GameBoard {
         }
     }
 
+    public GameBoard(int myPlayerNumber, GameBoard cloneMe){
+
+        this.myPlayerNumber = myPlayerNumber;
+        this.myPawnPositions =     (ArrayList<Point>) cloneMe.myPawnPositions.clone();
+        this.enemy1PawnPositions = (ArrayList<Point>) cloneMe.enemy1PawnPositions.clone();
+        this.enemy2PawnPositions = (ArrayList<Point>) cloneMe.enemy2PawnPositions.clone();
+
+
+        this.playField = new int [9][9];
+
+        for(int x = 0; x < 9; x++){
+            for(int y = 0; y < 9; y++){
+                this.playField[x][y] = cloneMe.playField[x][y];
+            }
+        }
+    }
+
 
 
 
@@ -207,7 +224,7 @@ public class GameBoard {
                 enemy1PawnPositions.add(toPoint);
             }
             if(myPlayerNumber == 2){
-                myPawnPositions.remove(fromPoint); 
+                myPawnPositions.remove(fromPoint);
                 myPawnPositions.add(toPoint);
 
             }
@@ -457,6 +474,23 @@ public class GameBoard {
         this.symbolMap.put(2, "G");
         this.symbolMap.put(4, "B");
         this.symbolMap.put(8, "X");
+    }
+
+
+    public ArrayList<Point> getPawnsOfEnemy(int currentMoveCounter, int currentPlayerIndicator){
+
+        if( ((currentPlayerIndicator + 1) % 3) == currentMoveCounter){
+            return enemy1PawnPositions;
+        }
+
+
+        if( ((currentPlayerIndicator + 2) % 3) == currentMoveCounter){
+            return enemy2PawnPositions;
+        }
+
+        return null; //SHOULD NEVER EVER HAPPEN!!
+
+
     }
 
 

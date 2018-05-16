@@ -10,6 +10,13 @@ public class MoveCounter {
     private  boolean blueInGame = true;
 
 
+
+    public MoveCounter(int initialCount, int playerNumber){
+        this.count = initialCount;
+        this.playerNumber = playerNumber;
+    }
+
+
     public void setPlayerNumber(int num){
         playerNumber = num;
     }

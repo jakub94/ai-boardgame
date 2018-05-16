@@ -26,8 +26,7 @@ public class GameTree {
 
         this.myPlayerNumber = playerNumber;
 
-        moveCounter = new MoveCounter();
-        moveCounter.setPlayerNumber(playerNumber);
+        moveCounter = new MoveCounter(playerNumber, playerNumber);
 
 
         HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(playField, playerNumber, BoardGameKI.gameBoard.myPawnPositions);
@@ -42,12 +41,12 @@ public class GameTree {
         for (MyMove move: possibleMoves) {
 
 
-            currentGameBoard.applyMove(move);
+            currentGameBoard.applyMove(move, moveCounter.count);
             moveCounter.increment(1);
 
 
 
-            currentOutcome = alphabeta(currentGameBoard, 3, -9999, +9999, false);
+            currentOutcome = alphabeta(currentGameBoard, 2, -9999, +9999, false);
 
 
 
@@ -72,13 +71,13 @@ public class GameTree {
         if(maximizingPlayer){
             v = -9999;
 
-            HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(configuration.playField, configuration.myPlayerNumber, configuration.myPawnPositions);
+            HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(configuration.playField, moveCounter.count, configuration.myPawnPositions);
 
 
             for (Move nextMove : possibleMoves) {
 
-                GameBoard nextConfiguration = configuration;
-                nextConfiguration.applyMove(nextMove);
+                GameBoard nextConfiguration = new GameBoard(moveCounter.count, configuration);
+                nextConfiguration.applyMove(nextMove, moveCounter.count);
                 moveCounter.increment(1);
 
 
@@ -94,12 +93,12 @@ public class GameTree {
         } else { //Minimizing Player (our 2 opponents)
             v = +9999;
 
-            HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(configuration.playField, configuration.myPlayerNumber, configuration.myPawnPositions);
+            HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(configuration.playField, moveCounter.count, configuration.getPawnsOfEnemy(moveCounter.count, myPlayerNumber));
 
             for (Move nextMove : possibleMoves) {
 
-                GameBoard nextConfiguration = configuration;
-                nextConfiguration.applyMove(nextMove);
+                GameBoard nextConfiguration = new GameBoard(moveCounter.count, configuration);
+                nextConfiguration.applyMove(nextMove, moveCounter.count);
                 moveCounter.increment(1);
 
                 v = Integer.min(v, alphabeta(nextConfiguration, depth-1, alpha, beta, moveCounter.isCountEqualTo(myPlayerNumber))); // methode um den nächsten player zu bestimmen
@@ -112,12 +111,5 @@ public class GameTree {
             return v;
         }
     }
-
-
-
-
-
-
-
 
 }
