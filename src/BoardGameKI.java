@@ -19,7 +19,7 @@ public class BoardGameKI {
     private static boolean greenInGame = true;
     private static boolean blueInGame = true;
 
-    private static GameBoard gameBoard;
+    public static GameBoard gameBoard;
     private static NetworkClient client;
     private static String teamName;
 
@@ -71,7 +71,20 @@ public class BoardGameKI {
 
             if(MoveCounter.isMyMove(move)) {
                 //HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(gameBoard.playField, myPlayerNumber, gameBoard.myPawnPositions);
+
+
+
+                GameTree gameTree = new GameTree(gameBoard.playField, myPlayerNumber, gameBoard.myPawnPositions);
+                //gameTree.AlphaBeta(3, -9999, 9999);
+
+
+
+
                 sendRandomMove();
+
+
+
+
             } else {
 
                 System.out.println("PI: " + MoveCounter.count);
@@ -129,6 +142,7 @@ public class BoardGameKI {
                 }
                 MoveCounter.increment(1);
                 gameBoard.printPlayField();
+
             }
         }
     }

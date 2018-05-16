@@ -98,7 +98,7 @@ public class GameBoard {
         if(allPossibleMoves.size() < 1) return new Move(0, 0, 8, 8);
         MyMove nextMyMove = (MyMove) allPossibleMoves.toArray()[random.nextInt(allPossibleMoves.size())];
         return new Move(nextMyMove.fromX, nextMyMove.fromY, nextMyMove.toX, nextMyMove.toY);
-    } 
+    }
 
     private Point getPointOfPawnThatCanMove(){
         boolean foundPossiblePawn = false;
@@ -134,10 +134,7 @@ public class GameBoard {
             playField[move.toX][move.toY] = playerCode;
         }
         updatePawnPositions(move);
-
-
-        RatingFunction.evaluate(playField, myPlayerNumber);
-
+       // RatingFunction.evaluate(playField, myPlayerNumber);
     }
 
     public void updatePawnPositions(Move move){

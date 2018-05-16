@@ -100,6 +100,7 @@ public class GameManager {
 
         if(cellValue == 8){ //TODO Remove for Tournament
             throw new RuntimeException("There is no pawn at this point, because the point has been eleminated");
+            //return false;
         }
 
         if(cellValue > 8){ // OBEN STEHT EINER
