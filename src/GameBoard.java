@@ -27,10 +27,15 @@ public class GameBoard {
 
     HashMap<Integer, String> symbolMap = new HashMap<Integer, String>();
 
+    MoveCounter moveCounter;
+
 
     public GameBoard(int myPlayerNumber){
 
         this.myPlayerNumber = myPlayerNumber;
+
+        moveCounter = new MoveCounter(myPlayerNumber, myPlayerNumber);
+
 
         for(int x = 0; x < 9; x++){
             for(int y = 0; y < 9; y++){

@@ -70,11 +70,11 @@ public class BoardGameKI {
             moveCounter.manageKickedPlayers();
 
             if(moveCounter.isMyMove(move)) {
-                  GameTree gameTree = new GameTree();
-                  Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
-                  client.sendMove(nextMove);
+//                  GameTree gameTree = new GameTree();
+//                  Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
+//                  client.sendMove(nextMove);
 
-              //sendRandomMove();
+              sendRandomMove();
 
             } else {
 
