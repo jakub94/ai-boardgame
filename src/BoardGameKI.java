@@ -10,7 +10,7 @@ import lenz.htw.gawihs.net.NetworkClient;
 
 //java -Djava.library.path=lib/native -jar gawihs.jar
 
-public class BoardGameKI { 
+public class BoardGameKI {
 
     public static GameBoard gameBoard;
     public static NetworkClient client;
@@ -35,15 +35,18 @@ public class BoardGameKI {
 
             if(move == null) {
 
-//                  GameTree gameTree = new GameTree();
-//                  Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
-//                  client.sendMove(nextMove);
+                gameBoard.manageTurn();
 
-              gameBoard.manageTurn();
 
-              Move myNextMove = gameBoard.getRandomMove();
-              System.out.println(teamName + " Makes move" + myNextMove);
-              client.sendMove(myNextMove);
+//                GameTree gameTree = new GameTree();
+//                Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
+//                System.out.println(teamName + " Makes move" + nextMove);
+//                client.sendMove(nextMove);
+
+
+                Move myNextMove = gameBoard.getRandomMove();
+                System.out.println(teamName + " Makes move" + myNextMove);
+                client.sendMove(myNextMove);
 
             } else {
                 gameBoard.validateAndApplyMove(move);

@@ -125,21 +125,21 @@ public class GameManager {
         return false;
     }
 
-    public static HashSet<MyMove> getAllPossibleMoves(int[][] playField, int playerIndicator, ArrayList<Point> myPawns){
+    public static HashSet<MyMove> getAllPossibleMoves(GameBoard gameBoard){
 
         HashSet<MyMove> possibleMoves = new HashSet<>();
 
         ArrayList<Point> pawnsThatMayMove = new ArrayList<>();
 
-        for (Point point : myPawns){
-            if(canMyPawnAtPointMove(point, playField, playerIndicator)){
+        for (Point point : gameBoard.myPawnPositions){
+            if(canMyPawnAtPointMove(point, gameBoard.playField, gameBoard.myPlayerNumber)){
                 pawnsThatMayMove.add(point);
             }
         }
 
         ArrayList<Point> availableNeighbors = new ArrayList<>();
         for (Point point : pawnsThatMayMove){
-            availableNeighbors = getPointsOfNeighborsThatCanBeVisited(point, playField, myPawns);
+            availableNeighbors = getPointsOfNeighborsThatCanBeVisited(point, gameBoard.playField, gameBoard.myPawnPositions);
             for(Point p: pawnsThatMayMove){
                 if(p != point){
                     for(Point pointOfTargetForP : availableNeighbors){

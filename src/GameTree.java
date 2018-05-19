@@ -39,7 +39,7 @@ public class GameTree {
 
         if(maximizingPlayer){
             bestValue = -9999;
-            HashSet<MyMove> children = GameManager.getAllPossibleMoves(configuration.playField, myPlayerNumber, configuration.myPawnPositions);
+            HashSet<MyMove> children = GameManager.getAllPossibleMoves(configuration);
 
             for(Move move : children){
 
@@ -64,15 +64,14 @@ public class GameTree {
     }
 
 
-//    public Move getBestMove(int[][] playField, int playerNumber){
+//    public Move getBestMove(GameBoard configuration){
 //
 //
-//        this.myPlayerNumber = playerNumber;
-//
-//        moveCounter = new MoveCounter(playerNumber, playerNumber);
-//
+//        this.myPlayerNumber = configuration.myPlayerNumber;
 //
 //        HashSet<MyMove> possibleMoves = GameManager.getAllPossibleMoves(playField, playerNumber, BoardGameKI.gameBoard.myPawnPositions);
+//
+//
 //        GameBoard currentGameBoard = new GameBoard(myPlayerNumber, playField, BoardGameKI.gameBoard.myPawnPositions, BoardGameKI.gameBoard.enemy1PawnPositions, BoardGameKI.gameBoard.enemy2PawnPositions);
 //
 //

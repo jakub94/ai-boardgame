@@ -130,7 +130,7 @@ public class GameBoard {
     }
 
     public Move getRandomMove(){
-        HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(playField, myPlayerNumber, myPawnPositions);
+        HashSet<MyMove> allPossibleMoves = GameManager.getAllPossibleMoves(this);
         if(allPossibleMoves.size() < 1) return new Move(0, 0, 8, 8);
         MyMove nextMyMove = (MyMove) allPossibleMoves.toArray()[random.nextInt(allPossibleMoves.size())];
         return new Move(nextMyMove.fromX, nextMyMove.fromY, nextMyMove.toX, nextMyMove.toY);
@@ -196,7 +196,6 @@ public class GameBoard {
                 }
             }
         }
-
     }
 
     public void applyMove(Move move){
