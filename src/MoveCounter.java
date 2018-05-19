@@ -16,13 +16,6 @@ public class MoveCounter {
         this.playerNumber = playerNumber;
     }
 
-
-    public void setPlayerNumber(int num){
-        playerNumber = num;
-    }
-
-
-
     public boolean isMyMove(Move move){
 
         if(move == null && playerNumber == count){
@@ -31,7 +24,6 @@ public class MoveCounter {
             return false;
         }
     }
-
 
     public boolean isCountEqualTo(int number){
         return count == number;
@@ -58,6 +50,20 @@ public class MoveCounter {
 
         return  count;  //should never happen
     }
+    public int getLast(int playerNumber){
+
+        if(playerNumber == 0){
+            return 2;
+        }
+        if(playerNumber == 1){
+            return 0;
+        }
+        if(playerNumber == 2){
+            return 1;
+        }
+
+        return  count;  //should never happen
+    }
 
     public int getNext(){
 
@@ -75,6 +81,22 @@ public class MoveCounter {
         return  count;  //should never happen
     }
 
+    public int getNext(int playerNumber){
+
+
+        if(playerNumber == 0){
+            return 1;
+        }
+        if(playerNumber == 1){
+            return 2;
+        }
+        if(playerNumber == 2){
+            return 0;
+        }
+
+        return  count;  //should never happen
+    }
+
 
     public boolean isEnemy1(){
         return count == ((playerNumber +1) % 3);
@@ -82,6 +104,10 @@ public class MoveCounter {
 
     public boolean isEnemy2(){
         return count == ((playerNumber +2) % 3);
+    }
+
+    public boolean isMyTurn(){
+        return count == playerNumber;
     }
 
     public void setMyTurn(){
@@ -107,6 +133,7 @@ public class MoveCounter {
                 this.increment(1);
             }
         }
+
     }
 
     public void removePlayer(int playerIndicator){
@@ -124,10 +151,5 @@ public class MoveCounter {
             blueInGame = false;
         }
     }
-
-
-
-
-
 
 }

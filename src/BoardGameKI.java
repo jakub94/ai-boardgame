@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -38,8 +36,6 @@ public class BoardGameKI {
     private static NetworkClient client;
     private static String teamName;
 
-    public static MoveCounter moveCounter;
-
     public static void main(String[] args) throws IOException {
 
         System.out.println("Initializing AI");
@@ -50,7 +46,7 @@ public class BoardGameKI {
 
         int myPlayerNumber = client.getMyPlayerNumber();
 
-        moveCounter = new MoveCounter(0, myPlayerNumber);
+
         gameBoard = new GameBoard(myPlayerNumber);
 
         client.getTimeLimitInSeconds();
@@ -67,9 +63,10 @@ public class BoardGameKI {
             System.out.println("Move Received: " + move);
 
 
-            moveCounter.manageKickedPlayers();
 
-            if(moveCounter.isMyMove(move)) {
+
+            if(gameBoard.isMyMove(move)) {
+
 //                  GameTree gameTree = new GameTree();
 //                  Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
 //                  client.sendMove(nextMove);
@@ -78,61 +75,51 @@ public class BoardGameKI {
 
             } else {
 
-                System.out.println("PI: " + moveCounter.count);
-
-                if(move == null){ //It is "My" turn, but the Movecounter is not correct. Somebody must have made a mistake! Remove him!
-
-                    if(moveCounter.isEnemy1()){
-                        System.out.println("Removing both enemies");
-                        moveCounter.removePlayer(moveCounter.getNext());
-                        gameBoard.removePlayer(moveCounter.getNext());
-                        moveCounter.removePlayer(moveCounter.count);
-                        gameBoard.removePlayer(moveCounter.count);
-                        moveCounter.setMyTurn();
+                if(move == null){
+                    if(gameBoard.isEnemy1Turn()){
+                        gameBoard.removeEnemy1();
+                        gameBoard.removeEnemy2();
+                        gameBoard.setMyTurn();
                         sendRandomMove();
-                        continue;
-
-                    } else if(moveCounter.isEnemy2()){
-
-                        System.out.println("Removing Enemy 2");
-                        moveCounter.removePlayer(moveCounter.count);
-                        gameBoard.removePlayer(moveCounter.count);
-                        moveCounter.setMyTurn();
+                    } else if(gameBoard.isEnemy2Turn()) {
+                        gameBoard.removeEnemy2();
+                        gameBoard.setMyTurn();
                         sendRandomMove();
-                        continue;
                     }
                 } else {
 
-                    if(moveCounter.isEnemy1()){
+                    if (gameBoard.isMyTurn()) {
+                        gameBoard.applyMove(move);
+                    } else {
+                        int playerWhoMadeTheMove = gameBoard.whoDidTheMove(move);
 
-                        if(gameBoard.isValidMove(move)){
-                            gameBoard.applyMove(move, moveCounter.count);
-                        } else {
-
-                            moveCounter.increment(1);
-
-                            if(gameBoard.isValidMove(move)) {
-                                moveCounter.removePlayer(moveCounter.getLast());
-                                gameBoard.removePlayer(moveCounter.getLast());
-                                gameBoard.applyMove(move, moveCounter.count);
+                        if(gameBoard.isEnemy1Turn()){
+                            if(playerWhoMadeTheMove == gameBoard.moveCounter.getNext(myPlayerNumber)){
+                                gameBoard.applyMove(move);
+                                continue;
+                            }
+                            if(playerWhoMadeTheMove == gameBoard.moveCounter.getLast(myPlayerNumber)){
+                                gameBoard.removeEnemy1();
+                                gameBoard.moveCounter.increment(1);
+                                gameBoard.applyMove(move);
+                                continue;
                             }
                         }
-                    } else if(moveCounter.isEnemy2()){
-
-                        if(gameBoard.isValidMove(move)){
-                            gameBoard.applyMove(move, moveCounter.count);
-                        } else {
-                            moveCounter.removePlayer(moveCounter.count);
-                            gameBoard.removePlayer(moveCounter.count);
+                        if(gameBoard.isEnemy2Turn()){
+                            if(playerWhoMadeTheMove == gameBoard.moveCounter.getLast(myPlayerNumber)){
+                                gameBoard.applyMove(move);
+                                continue;
+                            }
+                            if(playerWhoMadeTheMove == gameBoard.moveCounter.getNext(myPlayerNumber)){
+                                gameBoard.removeEnemy2();
+                                gameBoard.moveCounter.increment(2);
+                                gameBoard.applyMove(move);
+                                gameBoard.moveCounter.increment(2);
+                                continue;
+                            }
                         }
-
-                    } else { //"My" turn
-                        gameBoard.applyMove(move, moveCounter.count);
                     }
                 }
-                moveCounter.increment(1);
-                gameBoard.printPlayField();
-
             }
         }
     }
@@ -142,7 +129,7 @@ public class BoardGameKI {
         //System.out.println("PlayerNumber: "+ myPlayerNumber + " makes move: " + ourNextMove);
 
         try {
-            Thread.sleep(1);
+            Thread.sleep(111);
             client.sendMove(ourNextMove);
             System.out.println(teamName + " Makes move" + ourNextMove);
 

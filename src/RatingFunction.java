@@ -99,7 +99,4 @@ public class RatingFunction {
         return availableNeighbors.size();
     }
 
-
-
-
 }
