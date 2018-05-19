@@ -65,26 +65,11 @@ public class GameBoard {
         printPlayField();
     }
 
-    public GameBoard(int myPlayerNumber, int[][] playField, ArrayList<Point> myPawnPositions, ArrayList<Point> enemy1PawnPositions, ArrayList<Point> enemy2PawnPositions){
+    public GameBoard(GameBoard cloneMe){
 
-        this.myPlayerNumber = myPlayerNumber;
-        this.myPawnPositions =     (ArrayList<Point>) myPawnPositions.clone();
-        this.enemy1PawnPositions = (ArrayList<Point>) enemy1PawnPositions.clone();
-        this.enemy2PawnPositions = (ArrayList<Point>) enemy2PawnPositions.clone();
+        moveCounter = new MoveCounter(cloneMe.moveCounter);
 
-
-        this.playField = new int [9][9];
-
-        for(int x = 0; x < 9; x++){
-            for(int y = 0; y < 9; y++){
-                this.playField[x][y] = playField[x][y];
-            }
-        }
-    }
-
-    public GameBoard(int myPlayerNumber, GameBoard cloneMe){
-
-        this.myPlayerNumber = myPlayerNumber;
+        this.myPlayerNumber = cloneMe.myPlayerNumber;
         this.myPawnPositions =     (ArrayList<Point>) cloneMe.myPawnPositions.clone();
         this.enemy1PawnPositions = (ArrayList<Point>) cloneMe.enemy1PawnPositions.clone();
         this.enemy2PawnPositions = (ArrayList<Point>) cloneMe.enemy2PawnPositions.clone();
@@ -94,12 +79,13 @@ public class GameBoard {
 
         for(int x = 0; x < 9; x++){
             for(int y = 0; y < 9; y++){
-                this.playField[x][y] = cloneMe.playField[x][y];
+                cloneMe.playField[x][y] = cloneMe.playField[x][y];
             }
         }
+
+        initSymbolMap();
+        printPlayField();
     }
-
-
 
 
 

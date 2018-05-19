@@ -8,9 +8,9 @@ public class RatingFunction {
     private static ArrayList<Point> myPawns = new ArrayList<>();
 
 
-    private static int availablePawnsMultiplier = 1;
-    private static int pinnedEnemyPawnsMultiplier = 1;
-    private static int openNeighborMultiplier = 1;
+    private static int availablePawnsMultiplier = 0;
+    private static int pinnedEnemyPawnsMultiplier = 1000;
+    private static int openNeighborMultiplier = 0;
 
 
     public static int evaluate(int[][] playField, int playerIndicator){

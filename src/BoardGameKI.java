@@ -38,15 +38,15 @@ public class BoardGameKI {
                 gameBoard.manageTurn();
 
 
-//                GameTree gameTree = new GameTree();
-//                Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
-//                System.out.println(teamName + " Makes move" + nextMove);
-//                client.sendMove(nextMove);
+                GameTree gameTree = new GameTree(myPlayerNumber);
+                Move nextMove = gameTree.getBestMove(gameBoard);
+                System.out.println(teamName + " Makes move" + nextMove);
+                client.sendMove(nextMove);
 
-
-                Move myNextMove = gameBoard.getRandomMove();
-                System.out.println(teamName + " Makes move" + myNextMove);
-                client.sendMove(myNextMove);
+//
+//                Move myNextMove = gameBoard.getRandomMove();
+//                System.out.println(teamName + " Makes move" + myNextMove);
+//                client.sendMove(myNextMove);
 
             } else {
                 gameBoard.validateAndApplyMove(move);

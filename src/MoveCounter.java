@@ -16,17 +16,13 @@ public class MoveCounter {
         this.playerNumber = playerNumber;
     }
 
-    public boolean isMyMove(Move move){
 
-        if(move == null && playerNumber == count){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isCountEqualTo(int number){
-        return count == number;
+    public MoveCounter(MoveCounter cloneMe){
+        this.count = cloneMe.count;
+        this.playerNumber = cloneMe.playerNumber;
+        this.redInGame = cloneMe.redInGame;
+        this.greenInGame = cloneMe.greenInGame;
+        this.blueInGame = cloneMe.blueInGame;
     }
 
     public void increment(int amount){
