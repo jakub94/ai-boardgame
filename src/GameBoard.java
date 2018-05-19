@@ -344,7 +344,6 @@ public class GameBoard {
             if(myPlayerNumber == 2){//Wir sind Blau
                 removeEnemy(playerIndicator,2);
             }
-
         }
 
         if(playerIndicator == 2){//Blau fliegt
@@ -356,12 +355,10 @@ public class GameBoard {
             if(myPlayerNumber == 0){//Wir sind Rot
                 removeEnemy(playerIndicator,2);
             }
-
         }
     }
 
     private void removeEnemy(int playerIndicator, int enemyNumber){
-
         if(enemyNumber == 1){
             removePawns(playerIndicator, enemy1PawnPositions);
             enemy1PawnPositions.clear();
@@ -375,22 +372,17 @@ public class GameBoard {
     }
 
     private void removePawns(int playerIndicator, ArrayList<Point> pawnsToRemove){
-
-
         int currentX = 0;
         int currentY = 0;
         int currentCellValue = 0;
 
         for(Point pawn : pawnsToRemove){
-
             currentX = pawn.x;
             currentY = pawn.y;
             currentCellValue = playField[currentX][currentY];
 
             if(isPlayerOnTop(playerIndicator, currentCellValue)){
-
              //Do nothing. Die obere bleibt einfach liegen, falls jedoch die untere ausscheidet, kann man wieder auf dieses Feld
-
 
             } else {
                 if(currentCellValue > 8){//Jemand anderes ist oben als der zu löschende Pawn
@@ -398,7 +390,6 @@ public class GameBoard {
                 } else {
                     playField[currentX][currentY] = 8;
                 }
-
             }
         }
     }
@@ -414,9 +405,7 @@ public class GameBoard {
         if(playerIndicator == 2){
             if(cellValue >> 4 == 4) return true;
         }
-
         return false;
-
     }
 
     public void printPlayField(){
@@ -461,13 +450,6 @@ public class GameBoard {
     }
 
 
-
-
-    public boolean isMyMove(Move move){
-        moveCounter.manageKickedPlayers();
-        return moveCounter.isMyMove(move);
-    }
-
     public boolean isMyTurn(){
         return moveCounter.isMyTurn();
     }
@@ -481,7 +463,7 @@ public class GameBoard {
     }
 
     public void removeEnemy(){
-        moveCounter.removePlayer(moveCounter.count); 
+        moveCounter.removePlayer(moveCounter.count);
         removePlayer(moveCounter.count);
     }
     public void removeNextEnemy(){
