@@ -33,11 +33,13 @@ public class BoardGameKI {
             Move move = client.receiveMove();
             System.out.println("Move Received: " + move);
 
-            if(gameBoard.isMyMove(move)) {
+            if(move == null) {
 
 //                  GameTree gameTree = new GameTree();
 //                  Move nextMove = gameTree.getBestMove(gameBoard.playField, myPlayerNumber);
 //                  client.sendMove(nextMove);
+
+              gameBoard.manageTurn();
 
               Move myNextMove = gameBoard.getRandomMove();
               System.out.println(teamName + " Makes move" + myNextMove);

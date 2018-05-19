@@ -136,12 +136,6 @@ public class GameBoard {
         return new Move(nextMyMove.fromX, nextMyMove.fromY, nextMyMove.toX, nextMyMove.toY);
     }
 
-    private void sendRandomMove(){
-        Move myNextMove = getRandomMove();
-        System.out.println(myPlayerNumber + " Makes move" + myNextMove);
-        BoardGameKI.client.sendMove(myNextMove);
-    }
-
     private Point getPointOfPawnThatCanMove(){
         boolean foundPossiblePawn = false;
         Point pointOfPawnThatWantsToMove;
@@ -156,53 +150,53 @@ public class GameBoard {
         return pointOfPawnThatWantsToMove;
     }
 
+    public void manageTurn(){
+
+        moveCounter.manageKickedPlayers();
+
+        if(isEnemy1Turn()){
+            removeEnemy();
+            removeNextEnemy();
+            setMyTurn();
+        } else if(isEnemy2Turn()) {
+            removeEnemy();
+            setMyTurn();
+        }
+    }
+
     public void validateAndApplyMove(Move move){
-
-        if(move == null){
-            if(isEnemy1Turn()){
-                removeEnemy1();
-                removeEnemy2();
-                setMyTurn();
-                sendRandomMove();
-            } else if(isEnemy2Turn()) {
-                removeEnemy2();
-                setMyTurn();
-                sendRandomMove();
-            }
+        if (isMyTurn()) {
+            applyMove(move);
         } else {
+            int playerWhoMadeTheMove = whoDidTheMove(move);
 
-            if (isMyTurn()) {
-                applyMove(move);
-            } else {
-                int playerWhoMadeTheMove = whoDidTheMove(move);
-
-                if(isEnemy1Turn()){
-                    if(playerWhoMadeTheMove == moveCounter.getNext(myPlayerNumber)){
-                        applyMove(move);
-                        return;
-                    }
-                    if(playerWhoMadeTheMove == moveCounter.getLast(myPlayerNumber)){
-                        removeEnemy1();
-                        moveCounter.increment(1);
-                        applyMove(move);
-                        return;
-                    }
+            if(isEnemy1Turn()){
+                if(playerWhoMadeTheMove == moveCounter.getNext(myPlayerNumber)){
+                    applyMove(move);
+                    return;
                 }
-                if(isEnemy2Turn()){
-                    if(playerWhoMadeTheMove == moveCounter.getLast(myPlayerNumber)){
-                        applyMove(move);
-                        return;
-                    }
-                    if(playerWhoMadeTheMove == moveCounter.getNext(myPlayerNumber)){
-                        removeEnemy2();
-                        moveCounter.increment(2);
-                        applyMove(move);
-                        moveCounter.increment(2);
-                        return;
-                    }
+                if(playerWhoMadeTheMove == moveCounter.getLast(myPlayerNumber)){
+                    removeEnemy();
+                    moveCounter.increment(1);
+                    applyMove(move);
+                    return;
+                }
+            }
+            if(isEnemy2Turn()){
+                if(playerWhoMadeTheMove == moveCounter.getLast(myPlayerNumber)){
+                    applyMove(move);
+                    return;
+                }
+                if(playerWhoMadeTheMove == moveCounter.getNext(myPlayerNumber)){
+                    removeEnemy();
+                    moveCounter.increment(2);
+                    applyMove(move);
+                    moveCounter.increment(2);
+                    return;
                 }
             }
         }
+
     }
 
     public void applyMove(Move move){
@@ -225,6 +219,8 @@ public class GameBoard {
             }
             updatePawnPositions(move, moveCounter.count);
             moveCounter.increment(1);
+
+            printPlayField();
     }
 
     public void updatePawnPositions(Move move, int playerIndicator){
@@ -484,14 +480,13 @@ public class GameBoard {
         return moveCounter.isEnemy2();
     }
 
-    public void removeEnemy1(){
-        moveCounter.removePlayer(moveCounter.count);
+    public void removeEnemy(){
+        moveCounter.removePlayer(moveCounter.count); 
         removePlayer(moveCounter.count);
     }
-
-    public void removeEnemy2(){
-        moveCounter.removePlayer(moveCounter.count);
-        removePlayer(moveCounter.count);
+    public void removeNextEnemy(){
+        moveCounter.removePlayer(moveCounter.getNext());
+        removePlayer(moveCounter.getNext());
     }
 
     public void setMyTurn(){
